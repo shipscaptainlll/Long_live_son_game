@@ -53,7 +53,7 @@ public class ItemDragHandler : MonoBehaviour, IDragHandler, IEndDragHandler, Sys
 
         EventSystem.current.RaycastAll(pointer, objectUnderMouse);
 
-        Debug.Log(objectUnderMouse.First().gameObject);
+        //Debug.Log(objectUnderMouse.First().gameObject);
 
 
     }
@@ -61,11 +61,12 @@ public class ItemDragHandler : MonoBehaviour, IDragHandler, IEndDragHandler, Sys
     public void OnEndDrag(PointerEventData eventData)
     {
         //Debug.Log("OnEndDrag");
-        
-        
+
+
         transform.localPosition = Vector3.zero;
         transform.parent.GetChild(1).localPosition = new Vector3(38f, -44f, 0f);
         transform.parent.GetChild(1).SetAsLastSibling();
+        if (transform.parent.Find("Number") != null) { transform.parent.Find("Number").SetAsLastSibling(); }
         //transform.parent.GetChild(1).localPosition = Vector3.zero;
 
 

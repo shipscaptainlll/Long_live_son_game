@@ -12,6 +12,8 @@ public class Inventory : MonoBehaviour
 
     public event EventHandler<InventoryItemEventArgs> ItemAdded;
 
+    public event EventHandler<InventoryItemEventArgs> ItemSwapped;
+
     public event EventHandler<InventoryItemEventArgs> ItemRemoved;
 
     public List<IInventoryItem> mItems = new List<IInventoryItem>();
@@ -39,7 +41,7 @@ public class Inventory : MonoBehaviour
 
         EventSystem.current.RaycastAll(pointer, objectUnderMouse);
 
-        Debug.Log(objectUnderMouse.First().gameObject);
+        //Debug.Log(objectUnderMouse.First().gameObject);
 
         if (Input.GetKey(KeyCode.LeftControl))
         /*Defines what will happen if you LeftCtrl+Click on item in main inventory;*/
@@ -49,12 +51,19 @@ public class Inventory : MonoBehaviour
                 Image imageSwapFrom = objectUnderMouse.First().gameObject.transform.GetComponent<Image>();
                 ItemDragHandler imageSwapFromDragHandler = objectUnderMouse.First().gameObject.transform.GetComponent<ItemDragHandler>();
                 IInventoryItem itemSwapFrom = objectUnderMouse.First().gameObject.transform.GetComponent<ItemDragHandler>().Item;
-                
+                ItemCounter CounterIntSwapFrom = objectUnderMouse.First().gameObject.transform.parent.GetChild(1).GetComponent<ItemCounter>();
+                Text CounterIntTextSwapFrom = objectUnderMouse.First().gameObject.transform.parent.GetChild(1).GetComponent<Text>();
+
                 mainInventory.mItems.Remove(itemSwapFrom);
-                bottomInventory.AddItem(itemSwapFrom);
+                
+                bottomInventory.AddItem(itemSwapFrom, "CtrlSwap");
 
                 imageSwapFrom.enabled = false;
                 imageSwapFromDragHandler.Item = null;
+                CounterIntSwapFrom.itemsCount = 0;
+                CounterIntTextSwapFrom.text = "";
+                CounterIntSwapFrom.itemsInSlot = null;
+                CounterIntSwapFrom.Type = null;
             }
         }
 
@@ -66,48 +75,74 @@ public class Inventory : MonoBehaviour
                 Image imageSwapFrom = objectUnderMouse.First().gameObject.transform.GetComponent<Image>();
                 ItemDragHandler imageSwapFromDragHandler = objectUnderMouse.First().gameObject.transform.GetComponent<ItemDragHandler>();
                 IInventoryItem itemSwapFrom = objectUnderMouse.First().gameObject.transform.GetComponent<ItemDragHandler>().Item;
+                ItemCounter CounterIntSwapFrom = objectUnderMouse.First().gameObject.transform.parent.GetChild(1).GetComponent<ItemCounter>();
+                Text CounterIntTextSwapFrom = objectUnderMouse.First().gameObject.transform.parent.GetChild(1).GetComponent<Text>();
 
-                mainCoinPurse.AddAmmount(imageSwapFromDragHandler.Item.Cost);
+                mainCoinPurse.AddAmmount(imageSwapFromDragHandler.Item.Cost * CounterIntSwapFrom.itemsCount);
                 coinPurseIndicator.text = mainCoinPurse.CoinAmmount.ToString();
 
                 mainInventory.mItems.Remove(itemSwapFrom);
 
                 imageSwapFrom.enabled = false;
                 imageSwapFromDragHandler.Item = null;
+                CounterIntSwapFrom.itemsCount = 0;
+                CounterIntTextSwapFrom.text = "";
+                CounterIntSwapFrom.itemsInSlot = null;
+                CounterIntSwapFrom.Type = null;
             }
         }
     }
 
     public void AddItem(IInventoryItem item)
     {
+        
         if (mItems.Count < SLOTS)
         {
-
             MeshCollider collider = (item as MonoBehaviour).GetComponent<MeshCollider>();
-            
-            
+
             if (collider.enabled)
             {
-                
-                
                 collider.enabled = false;
                 item.OnPickUp();
-
             }
-
                 //mItems.Add(item);
 
-                
-
-                
             if(ItemAdded != null)
-                
             {
-                
                 ItemAdded(this, new InventoryItemEventArgs(item));
                 //Debug.Log("Collider is enabled");
             }
-            
+        }
+    }
+
+    public void AddItem(IInventoryItem item, string process)
+    {
+        
+        if (mItems.Count < SLOTS)
+        {
+            MeshCollider collider = (item as MonoBehaviour).GetComponent<MeshCollider>();
+
+            if (collider.enabled)
+            {
+                collider.enabled = false;
+                item.OnPickUp();
+            }
+            //mItems.Add(item);
+
+            if (ItemAdded != null)
+            {
+                if (process == "CtrlSwap")
+                {
+                    
+                    ItemSwapped(this, new InventoryItemEventArgs(item));
+                } else
+                {
+                    
+                    //ItemAdded(this, new InventoryItemEventArgs(item));
+                }
+                
+                //Debug.Log("Collider is enabled");
+            }
         }
     }
 

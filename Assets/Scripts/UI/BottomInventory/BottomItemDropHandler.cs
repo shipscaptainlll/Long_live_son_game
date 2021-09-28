@@ -184,19 +184,25 @@ public class BottomItemDropHandler : MonoBehaviour, IDropHandler, System.IClonea
             {
                 Image imageSwapTo = objectUnderMouse.First().gameObject.transform.GetComponent<Image>();
                 ItemDragHandler imageSwapToDragHandler = objectUnderMouse.First().gameObject.transform.GetComponent<ItemDragHandler>();
-
+                
                 Image imageSwapFrom = eventData.pointerDrag.GetComponent<Image>();
                 ItemDragHandler imageSwapFromDragHandler = eventData.pointerDrag.GetComponent<ItemDragHandler>();
+                ItemCounter CounterIntSwapFrom = eventData.pointerDrag.transform.parent.GetChild(1).GetComponent<ItemCounter>();
+                Text CounterIntTextSwapFrom = eventData.pointerDrag.transform.parent.GetChild(1).GetComponent<Text>();
 
-                
                 IInventoryItem itemSwapFrom = eventData.pointerDrag.GetComponent<ItemDragHandler>().Item;
-                mainCoinPurse.AddAmmount(imageSwapFromDragHandler.Item.Cost);
+
+                mainCoinPurse.AddAmmount(imageSwapFromDragHandler.Item.Cost * CounterIntSwapFrom.itemsCount);
                 coinPurseIndicator.text = mainCoinPurse.CoinAmmount.ToString();
                 
                 _Inventory.mItems.Remove(itemSwapFrom);
 
                 imageSwapFrom.sprite = null;
                 imageSwapFrom.enabled = false;
+                CounterIntSwapFrom.itemsCount = 0;
+                CounterIntTextSwapFrom.text = "";
+                CounterIntSwapFrom.itemsInSlot = null;
+                CounterIntSwapFrom.Type = null;
 
                 imageSwapFromDragHandler.Item = null;
             }

@@ -59,7 +59,7 @@ public class ForceField : MonoBehaviour
         }
         else if (isCastingSphere == true)
         {
-            
+            _Bloom.intensity.value = 0;
             speedForceField = new Vector3(1.0f, 1.0f, 1.0f);
             isCastingSphere = false;
         }
@@ -82,6 +82,7 @@ public class ForceField : MonoBehaviour
             speedForceField = new Vector3(1.0f, 1.0f, 1.0f);
             isCastingSphere = false;
             elapsedTimeBar = 0f;
+            _Bloom.intensity.value = 0f;
         }
 
     }

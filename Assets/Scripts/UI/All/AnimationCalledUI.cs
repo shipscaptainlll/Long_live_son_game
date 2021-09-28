@@ -27,6 +27,7 @@ public class AnimationCalledUI : MonoBehaviour
                 hud.GetComponent<CanvasGroup>().alpha += 0.05f;
                 yield return null;
             }
+            hud.GetComponent<CanvasGroup>().alpha = 1.0f;
             //hud.GetComponent<Animator>().enabled = false;
         }
         else if (hud.GetComponent<HUDShopInventory>())
@@ -42,6 +43,7 @@ public class AnimationCalledUI : MonoBehaviour
                 hud.GetComponent<CanvasGroup>().alpha += 0.05f;
                 yield return null;
             }
+            hud.GetComponent<CanvasGroup>().alpha = 1.0f;
             //hud.GetComponent<Animator>().enabled = false;
         }
 

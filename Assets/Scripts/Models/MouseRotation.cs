@@ -128,7 +128,7 @@ public class MouseRotation : MonoBehaviour
         oreDetectedHealth = itemDetectedGO.GetComponent<Health>();
 
         
-        Debug.Log(oreDetectedInstanceGO);
+        //Debug.Log(oreDetectedInstanceGO);
     }
 
     public void mineAlchemyResources()
@@ -244,7 +244,7 @@ public class MouseRotation : MonoBehaviour
             z2 = -20;
         }
         int summ = x + y + z1 + z2;
-        Debug.Log(summ);
+        //Debug.Log(summ);
         oreDetectedHealth.ModifyHealth(summ);
     }
     private void OnDrawGizmos()

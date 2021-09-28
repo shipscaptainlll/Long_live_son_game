@@ -228,9 +228,9 @@ public class PersonMovement : MonoBehaviour
 
     public void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        /*IInventoryItem item = hit.collider.GetComponent<IInventoryItem>();
-        //Debug.Log(item);
-        if (item != null)
+        IInventoryItem item = hit.collider.GetComponent<IInventoryItem>();
+        Debug.Log(item);
+        if (item != null && item.Type == "Tool")
         {
             
             if (InventoryLockState.sprite == Locked)
@@ -244,7 +244,7 @@ public class PersonMovement : MonoBehaviour
                     inventory.AddItem(item);
                 }
             }
-        }*/
+        }
         //if (hit.collider.tag == "MERCHANT")
         //{
         //    merchant.transform.localPosition = new Vector3(2000, 2000, 2000);
