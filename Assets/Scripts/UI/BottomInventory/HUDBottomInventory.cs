@@ -42,11 +42,12 @@ public class HUDBottomInventory : MonoBehaviour, System.ICloneable
 
 
                 ItemDragHandler itemDragHandler = imgPanel.GetComponent<ItemDragHandler>();
-
-                if (Image.enabled && CounterInt.itemsCount < 10 && CounterInt.Type == e.Item.Type)
+                //
+                
+                if (Image.enabled && CounterInt.itemsCount < 10 && CounterInt.Name == e.Item.Name)
                 {
-                    
-                    
+
+                    Debug.Log(CounterInt.itemsInSlot.First());
                     //CounterInt.increaseCounter(); this
                     CounterInt.addItemInSlot(e.Item);
                     CounterInt.addToCounter(0, e.Item);
@@ -127,8 +128,9 @@ public class HUDBottomInventory : MonoBehaviour, System.ICloneable
                 CounterText = slot.GetChild(0).GetChild(1).GetComponent<Text>();
                 ItemCounter CounterInt = slot.GetChild(0).GetChild(1).GetComponent<ItemCounter>();
                 ItemDragHandler itemDragHandler = imgPanel.GetComponent<ItemDragHandler>();
-
-                if (Image.enabled && CounterInt.itemsCount < 10 && e.Item.Count <= 5 && CounterInt.Type == e.Item.Type)
+                //Debug.Log(CounterInt.itemsInSlot.First().Name);
+                //Debug.Log(e.Item.Name);
+                if (Image.enabled && CounterInt.itemsCount < 10 && e.Item.Count <= 5 && CounterInt.Name == e.Item.Name)
                 {
                     //Image.enabled = true;
                     //Image.sprite = e.Item.Image;
@@ -173,6 +175,7 @@ public class HUDBottomInventory : MonoBehaviour, System.ICloneable
                     CounterText.text = e.Item.Count.ToString();
                     //CounterText.text = CounterInt.itemsCount.ToString(); this
                     CounterInt.Type = e.Item.Type;
+                    CounterInt.Name = e.Item.Name;
                     //Debug.Log(CounterInt.Type);
                     inventory.AddItemToList(e.Item);
                     //Debug.Log(inventory.mItems.Last());
@@ -182,6 +185,8 @@ public class HUDBottomInventory : MonoBehaviour, System.ICloneable
                     Image.sprite = e.Item.Image;
                     itemDragHandler.Item = e.Item;
                     isAdded = true;
+                    
+                    
                     break;
                 }
             }

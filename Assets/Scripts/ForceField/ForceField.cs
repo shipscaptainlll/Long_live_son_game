@@ -43,7 +43,7 @@ public class ForceField : MonoBehaviour
     {
         if (isCastingSphere == false)
         {
-            Debug.Log("Hello");
+            //Debug.Log("Hello");
             
             handAlchemic.SetActive(true);
             handAlchemic.GetComponent<Animator>().Play("Grasp");

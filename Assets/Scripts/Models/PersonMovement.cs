@@ -50,6 +50,12 @@ public class PersonMovement : MonoBehaviour
     public ParticleSystem magicFog;
     ParticleSystem.ShapeModule ps;
 
+    //Hand
+    public GameObject hand;
+    public GameObject slot1;
+    public GameObject slot2;
+    public GameObject slot3;
+
     //Contacting with trees
     // public TreeAnimation treeAnimation;
 
@@ -74,7 +80,36 @@ public class PersonMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            foreach (Transform tool in hand.transform)
+            {
+                tool.gameObject.SetActive(false);
+            }
+            string toolNeeded = slot1.GetComponent<ItemDragHandler>().Item.Name.ToString();
+            hand.transform.Find(toolNeeded).gameObject.SetActive(true);
+            Debug.Log(slot1.GetComponent<ItemDragHandler>().Item.Name.ToString());
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            foreach (Transform tool in hand.transform)
+            {
+                tool.gameObject.SetActive(false);
+            }
+            string toolNeeded = slot2.GetComponent<ItemDragHandler>().Item.Name.ToString();
+            hand.transform.Find(toolNeeded).gameObject.SetActive(true);
+            Debug.Log(slot1.GetComponent<ItemDragHandler>().Item.Name.ToString());
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            foreach (Transform tool in hand.transform)
+            {
+                tool.gameObject.SetActive(false);
+            }
+            string toolNeeded = slot3.GetComponent<ItemDragHandler>().Item.Name.ToString();
+            hand.transform.Find(toolNeeded).gameObject.SetActive(true);
+            Debug.Log(slot1.GetComponent<ItemDragHandler>().Item.Name.ToString());
+        }
         if (Input.GetKeyDown(KeyCode.Z))
         {
             
@@ -229,7 +264,7 @@ public class PersonMovement : MonoBehaviour
     public void OnControllerColliderHit(ControllerColliderHit hit)
     {
         IInventoryItem item = hit.collider.GetComponent<IInventoryItem>();
-        Debug.Log(item);
+        //Debug.Log(item);
         if (item != null && item.Type == "Tool")
         {
             

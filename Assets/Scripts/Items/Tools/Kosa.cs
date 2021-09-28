@@ -49,7 +49,7 @@ public class Kosa : MonoBehaviour, IInventoryItem
     {
         get
         {
-            return 10;
+            return 100;
         }
     }
 

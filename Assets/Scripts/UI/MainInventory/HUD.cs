@@ -42,7 +42,7 @@ public class HUD : MonoBehaviour
                 ItemCounter CounterInt = slot.GetChild(0).GetChild(1).GetComponent<ItemCounter>();
                 ItemDragHandler itemDragHandler = imgPanel.GetComponent<ItemDragHandler>();
 
-                if (Image.enabled && CounterInt.itemsCount < 10 && CounterInt.Type == e.Item.Type)
+                if (Image.enabled && CounterInt.itemsCount < 10 && CounterInt.Name == e.Item.Name)
                 {
                     //Image.enabled = true;
                     //Image.sprite = e.Item.Image;
@@ -115,8 +115,8 @@ public class HUD : MonoBehaviour
                 CounterText = slot.GetChild(0).GetChild(1).GetComponent<Text>();
                 ItemCounter CounterInt = slot.GetChild(0).GetChild(1).GetComponent<ItemCounter>();
                 ItemDragHandler itemDragHandler = imgPanel.GetComponent<ItemDragHandler>();
-
-                if (Image.enabled && CounterInt.itemsCount < 10 && e.Item.Count <= 5 && CounterInt.Type == e.Item.Type)
+                //Debug.Log(CounterInt.itemsInSlot.First());
+                if (Image.enabled && CounterInt.itemsCount < 10 && e.Item.Count <= 5 && CounterInt.Name == e.Item.Name)
                 {
                     //Image.enabled = true;
                     //Image.sprite = e.Item.Image;
@@ -161,6 +161,7 @@ public class HUD : MonoBehaviour
                     CounterText.text = e.Item.Count.ToString();
                     //CounterText.text = CounterInt.itemsCount.ToString(); this
                     CounterInt.Type = e.Item.Type;
+                    CounterInt.Name = e.Item.Name;
                     //Debug.Log(CounterInt.Type);
                     inventory.AddItemToList(e.Item);
                     //Debug.Log(inventory.mItems.Last());

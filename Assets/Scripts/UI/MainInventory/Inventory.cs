@@ -41,7 +41,7 @@ public class Inventory : MonoBehaviour
 
         EventSystem.current.RaycastAll(pointer, objectUnderMouse);
 
-        //Debug.Log(objectUnderMouse.First().gameObject);
+        //1Debug.Log(objectUnderMouse.First().gameObject);
 
         if (Input.GetKey(KeyCode.LeftControl))
         /*Defines what will happen if you LeftCtrl+Click on item in main inventory;*/

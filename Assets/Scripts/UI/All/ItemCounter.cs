@@ -7,6 +7,7 @@ public class ItemCounter : MonoBehaviour
 {
     public int itemsCount = 0;
     public string Type;
+    public string Name;
     public List<IInventoryItem> itemsInSlot = new List<IInventoryItem>();
     public int itemsAdded = 0;
     public int itemsAddingPerObject;
