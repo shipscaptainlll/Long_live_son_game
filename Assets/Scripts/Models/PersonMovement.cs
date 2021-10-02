@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -56,6 +57,8 @@ public class PersonMovement : MonoBehaviour
     public GameObject slot2;
     public GameObject slot3;
 
+    
+
     //Contacting with trees
     // public TreeAnimation treeAnimation;
 
@@ -70,6 +73,7 @@ public class PersonMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         //HUD.SetActive(false);
         HUD.SetActive(true);
         mainCoinPurse.coinAmmount = 0;
@@ -80,6 +84,8 @@ public class PersonMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             foreach (Transform tool in hand.transform)
