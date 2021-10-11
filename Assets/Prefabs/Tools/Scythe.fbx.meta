@@ -1,0 +1,207 @@
+fileFormatVersion: 2
+guid: c88712c0fc1f696439fce0e7d3b2e077
+ModelImporter:
+  serializedVersion: 20200
+  internalIDToNameTable:
+  - first:
+      74: 8057514350439536365
+    second: Scythe_edge|AxeAction
+  - first:
+      74: -4541440348743784271
+    second: Scythe_edge|AxeAction.002
+  - first:
+      74: 8599295345360447579
+    second: Scythe_edge|AxeAction.004
+  - first:
+      74: -8725025604479583139
+    second: Scythe_edge|AxeArnatureAction
+  - first:
+      74: -2820170306777016920
+    second: Scythe_edge|CubeAction
+  - first:
+      74: 6074639419452051099
+    second: Scythe_edge|CubeAction.001
+  - first:
+      74: -364274577150303307
+    second: Scythe_edge|CubeAction.002
+  - first:
+      74: 5018871614736354906
+    second: Scythe_edge|CubeAction.003
+  - first:
+      74: -1230433299712310074
+    second: Scythe_edge|CubeAction.004
+  - first:
+      74: 1435445159116737915
+    second: Scythe_edge|CubeAction.005
+  - first:
+      74: 3213548051569850903
+    second: Scythe_edge|CubeAction.006
+  - first:
+      74: 850051910142719532
+    second: Scythe_edge|CubeAction.007
+  - first:
+      74: 5336923335295368936
+    second: Scythe_edge|CubeAction.008
+  - first:
+      74: 7763606871148377843
+    second: Scythe_edge|CubeAction.009
+  - first:
+      74: 1552886267062496564
+    second: Scythe_edge|CubeAction.010
+  - first:
+      74: -2974843760526441884
+    second: Scythe_edge|CubeAction.011
+  - first:
+      74: -6273813023481026712
+    second: Scythe_edge|SunAction
+  - first:
+      74: 6519795834164284838
+    second: Scythe_handle|AxeAction
+  - first:
+      74: -7576031938632690703
+    second: Scythe_handle|AxeAction.002
+  - first:
+      74: -141019946586130736
+    second: Scythe_handle|AxeAction.004
+  - first:
+      74: 6644355182995807437
+    second: Scythe_handle|AxeArnatureAction
+  - first:
+      74: -705401876687726717
+    second: Scythe_handle|CubeAction
+  - first:
+      74: 5339430357399983474
+    second: Scythe_handle|CubeAction.001
+  - first:
+      74: 5226272376310628450
+    second: Scythe_handle|CubeAction.002
+  - first:
+      74: -4818104386707322307
+    second: Scythe_handle|CubeAction.003
+  - first:
+      74: 3328727014410862955
+    second: Scythe_handle|CubeAction.004
+  - first:
+      74: -2352105475416812690
+    second: Scythe_handle|CubeAction.005
+  - first:
+      74: -8985644446589193314
+    second: Scythe_handle|CubeAction.006
+  - first:
+      74: -5174950665724693518
+    second: Scythe_handle|CubeAction.007
+  - first:
+      74: -898870282065240876
+    second: Scythe_handle|CubeAction.008
+  - first:
+      74: 5452281926158805046
+    second: Scythe_handle|CubeAction.009
+  - first:
+      74: -5727050412230178741
+    second: Scythe_handle|CubeAction.010
+  - first:
+      74: 574966069788485902
+    second: Scythe_handle|CubeAction.011
+  - first:
+      74: 3674831974943504728
+    second: Scythe_handle|SunAction
+  - first:
+      74: -7743965027131984428
+    second: Scythe_handle|Scythe_handleAction
+  externalObjects: {}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

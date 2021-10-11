@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,41 +6,65 @@ using UnityEngine.UI;
 
 public class RockResourceCounter : MonoBehaviour
 {
-    private int count;
-
+    public int count;
+    private float mineSpeedCount;
     private Text countToText;
+    private Text mineSpeedToText;
 
+    //Cargo panel
+    public CargoResourceCounter cargoResourceCounter;
 
     public string Type
     {
         get
         {
-            return "Rock";
+            return "RockShard";
         }
     }
 
     public void Start()
     {
         countToText = transform.Find("Counter").GetChild(0).GetComponent<Text>();
+        mineSpeedToText = transform.Find("CounterPerMinute").Find("CounterText").GetComponent<Text>();
     }
-    void OnEnable()
-    {
-        InputController.OnClicked += AddToCounter;
-    }
+    
 
-    private void OnDisable()
+    public void AddToCounter(int e)
     {
-        InputController.OnClicked -= AddToCounter;
-    }
-
-    void AddToCounter()
-    {
-        count += 1;
+        count += e;
         RefreshCounter(); 
     }
 
-    void RefreshCounter()
+    public void AddToMineSpeedCounter(float e)
     {
+        mineSpeedCount += e;
+        float roundItUp = Mathf.Round(mineSpeedCount * 100f);
+        float roundAgain = roundItUp * 0.01f;
+        mineSpeedCount = roundAgain;
+        RefreshMineSpeedCounter();
+    }
+
+    void RefreshCounter()
+    {        
         countToText.text = count.ToString();
+        SyncWithCargoCounter();
+    }
+
+    void SyncWithCargoCounter()
+    {
+        cargoResourceCounter.count = count;
+        cargoResourceCounter.RefreshCounter();
+    }
+
+    void RefreshMineSpeedCounter()
+    {
+        mineSpeedToText.text = mineSpeedCount.ToString("0.00");
+        SyncWithCargoSpeedCounter();
+    }
+
+    void SyncWithCargoSpeedCounter()
+    {
+        cargoResourceCounter.mineSpeedCount = mineSpeedCount;
+        cargoResourceCounter.RefreshMineSpeedCounter();
     }
 }

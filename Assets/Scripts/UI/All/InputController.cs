@@ -1,23 +1,28 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class InputController : MonoBehaviour
 {
-    public delegate void ClickAction();
-    public static event ClickAction OnClicked;
+    public int low = 1;
+    public InteractionController interactionController;
+    public event Action<int> countChanged= delegate { };
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.S))
         {
-            if (OnClicked != null)
-            {
-                OnClicked();
-                Debug.Log("First Controller");
-            }
+            
+            
         }
 
-       
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            
+            interactionController.InteractWithObject();
+            
+        }
+
     }
 }

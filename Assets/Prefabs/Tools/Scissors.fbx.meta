@@ -1,0 +1,360 @@
+fileFormatVersion: 2
+guid: 66c081bca0544ec43b8370fed14a3041
+ModelImporter:
+  serializedVersion: 20200
+  internalIDToNameTable:
+  - first:
+      74: -6091435296510164937
+    second: Left Scissor|AxeAction
+  - first:
+      74: 3105968045336834082
+    second: Left Scissor|AxeAction.002
+  - first:
+      74: -8701858093209633516
+    second: Left Scissor|AxeAction.004
+  - first:
+      74: 8779262422817043120
+    second: Left Scissor|AxeArnatureAction
+  - first:
+      74: -458368820687131298
+    second: Left Scissor|CubeAction
+  - first:
+      74: 6675554041476665338
+    second: Left Scissor|CubeAction.001
+  - first:
+      74: -6725050094990745242
+    second: Left Scissor|CubeAction.002
+  - first:
+      74: -1690924002206177177
+    second: Left Scissor|CubeAction.003
+  - first:
+      74: 4603277134429839161
+    second: Left Scissor|CubeAction.004
+  - first:
+      74: -7514770589881393910
+    second: Left Scissor|CubeAction.005
+  - first:
+      74: 2806632621852334435
+    second: Left Scissor|CubeAction.006
+  - first:
+      74: -3893830525007461657
+    second: Left Scissor|CubeAction.007
+  - first:
+      74: -8770807381489968560
+    second: Left Scissor|CubeAction.008
+  - first:
+      74: -795446469921533701
+    second: Left Scissor|CubeAction.009
+  - first:
+      74: -8517755105920959660
+    second: Left Scissor|CubeAction.010
+  - first:
+      74: 3134730162574785900
+    second: Left Scissor|CubeAction.011
+  - first:
+      74: 7926878806586444352
+    second: Left Scissor|CubeAction.012
+  - first:
+      74: 4470471916962839780
+    second: Left Scissor|CubeAction.013
+  - first:
+      74: 4857601503724139605
+    second: Left Scissor|CubeAction.014
+  - first:
+      74: -2781947270356483385
+    second: Left Scissor|CubeAction.015
+  - first:
+      74: 4880608289660075123
+    second: Left Scissor|CubeAction.016
+  - first:
+      74: 4928591254444250174
+    second: Left Scissor|CubeAction.017
+  - first:
+      74: 3524995234847763814
+    second: Left Scissor|CubeAction.018
+  - first:
+      74: 4674849160602067529
+    second: Left Scissor|CubeAction.019
+  - first:
+      74: -5067928337362875904
+    second: Left Scissor|CubeAction.020
+  - first:
+      74: -9167135250272747779
+    second: Left Scissor|Scythe_handleAction
+  - first:
+      74: 7991986140542234820
+    second: Left Scissor|SunAction
+  - first:
+      74: -4808993815526666968
+    second: Right scissor|AxeAction
+  - first:
+      74: -7721425057429590379
+    second: Right scissor|AxeAction.002
+  - first:
+      74: 2814770774259360260
+    second: Right scissor|AxeAction.004
+  - first:
+      74: -805477646882765100
+    second: Right scissor|AxeArnatureAction
+  - first:
+      74: 2891426231267956873
+    second: Right scissor|CubeAction
+  - first:
+      74: -3039953661619383850
+    second: Right scissor|CubeAction.001
+  - first:
+      74: 8278601798434494910
+    second: Right scissor|CubeAction.002
+  - first:
+      74: 8778253587911937773
+    second: Right scissor|CubeAction.003
+  - first:
+      74: -792066555242752429
+    second: Right scissor|CubeAction.004
+  - first:
+      74: -2537621401381893138
+    second: Right scissor|CubeAction.005
+  - first:
+      74: 6734119644684450400
+    second: Right scissor|CubeAction.006
+  - first:
+      74: -4789286790842126468
+    second: Right scissor|CubeAction.007
+  - first:
+      74: -2766112248472808813
+    second: Right scissor|CubeAction.008
+  - first:
+      74: -4791341963810130003
+    second: Right scissor|CubeAction.009
+  - first:
+      74: -296357582399773806
+    second: Right scissor|CubeAction.010
+  - first:
+      74: -5359921331081667821
+    second: Right scissor|CubeAction.011
+  - first:
+      74: 3147768019046326946
+    second: Right scissor|CubeAction.012
+  - first:
+      74: 5845135409856919208
+    second: Right scissor|CubeAction.013
+  - first:
+      74: -6719277186397706022
+    second: Right scissor|CubeAction.014
+  - first:
+      74: 2531593590760098355
+    second: Right scissor|CubeAction.015
+  - first:
+      74: -2666287741353748846
+    second: Right scissor|CubeAction.016
+  - first:
+      74: 4963308970393110946
+    second: Right scissor|CubeAction.017
+  - first:
+      74: -5050462128617843372
+    second: Right scissor|CubeAction.018
+  - first:
+      74: 8396972623009079072
+    second: Right scissor|CubeAction.019
+  - first:
+      74: -5192073393942227677
+    second: Right scissor|CubeAction.020
+  - first:
+      74: -2269039781338486925
+    second: Right scissor|Scythe_handleAction
+  - first:
+      74: -3741481203857641228
+    second: Right scissor|SunAction
+  - first:
+      74: 1957362515077461234
+    second: Right scissor|CubeAction.021
+  - first:
+      74: 1920631117187885387
+    second: Right scissor|CubeAction.022
+  - first:
+      74: -8986625297455515813
+    second: Right scissor.001|AxeAction
+  - first:
+      74: -6829201285970895197
+    second: Right scissor.001|AxeAction.002
+  - first:
+      74: -246204532914948643
+    second: Right scissor.001|AxeAction.004
+  - first:
+      74: 2998067917244738650
+    second: Right scissor.001|AxeArnatureAction
+  - first:
+      74: -927956785691788152
+    second: Right scissor.001|CubeAction
+  - first:
+      74: 1464213520117975027
+    second: Right scissor.001|CubeAction.001
+  - first:
+      74: -2876242571125970250
+    second: Right scissor.001|CubeAction.002
+  - first:
+      74: -3281596946752648289
+    second: Right scissor.001|CubeAction.003
+  - first:
+      74: 4568027343852430592
+    second: Right scissor.001|CubeAction.004
+  - first:
+      74: -5397113976912759188
+    second: Right scissor.001|CubeAction.005
+  - first:
+      74: 2483127472794480687
+    second: Right scissor.001|CubeAction.006
+  - first:
+      74: 3682291131769382427
+    second: Right scissor.001|CubeAction.007
+  - first:
+      74: -120160781095460163
+    second: Right scissor.001|CubeAction.008
+  - first:
+      74: -16922038232792433
+    second: Right scissor.001|CubeAction.009
+  - first:
+      74: 4391798434365211274
+    second: Right scissor.001|CubeAction.010
+  - first:
+      74: 6838875514932610222
+    second: Right scissor.001|CubeAction.011
+  - first:
+      74: 6927846479348600468
+    second: Right scissor.001|CubeAction.012
+  - first:
+      74: -3173669443073408613
+    second: Right scissor.001|CubeAction.013
+  - first:
+      74: 5525084129457168195
+    second: Right scissor.001|CubeAction.014
+  - first:
+      74: 1621209786192606654
+    second: Right scissor.001|CubeAction.015
+  - first:
+      74: 1187608641000679526
+    second: Right scissor.001|CubeAction.016
+  - first:
+      74: 4126678273770138675
+    second: Right scissor.001|CubeAction.017
+  - first:
+      74: -4030783086727275940
+    second: Right scissor.001|CubeAction.018
+  - first:
+      74: 2256923440357964962
+    second: Right scissor.001|CubeAction.019
+  - first:
+      74: -4511814474032062777
+    second: Right scissor.001|CubeAction.020
+  - first:
+      74: -2329750427577467741
+    second: Right scissor.001|CubeAction.021
+  - first:
+      74: 6380593840036713448
+    second: Right scissor.001|CubeAction.022
+  - first:
+      74: 6080645088819224097
+    second: Right scissor.001|Scythe_handleAction
+  - first:
+      74: -2994688176664539938
+    second: Right scissor.001|SunAction
+  - first:
+      74: 4534056979215030489
+    second: Right scissor.001|Right scissor.001Action
+  externalObjects: {}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

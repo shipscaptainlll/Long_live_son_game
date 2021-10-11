@@ -75,7 +75,7 @@ public class MouseRotation : MonoBehaviour
         //Camera controll
         
         
-        
+        /*
         RaycastHit hit = new RaycastHit();
 
         if (Physics.SphereCast(transform.position, 1.0f, transform.TransformDirection(Vector3.forward * 3), out hit, maxDistance, currentObjectLayerMask))
@@ -117,54 +117,63 @@ public class MouseRotation : MonoBehaviour
                 //Debug.Log("Seeing grass");
                 characterAnimator.seeingGrass();
             }
-        }
+        } */
     }
     
-    public void detectObject()
+    public GameObject detectObject()
     {
+        
         RaycastHit hit = new RaycastHit();
 
         if (Physics.SphereCast(transform.position, 1.0f, transform.TransformDirection(Vector3.forward * 3), out hit, maxDistance, currentObjectLayerMask))
         {
             GameObject Object = hit.transform.gameObject;
             double distanceFromObject = hit.distance;
+            
+            if (hit.collider != null)
+            {
+                itemDetected = hit.collider.GetComponent<IInventoryItem>();
+                itemDetectedGO = hit.collider.gameObject;
+                itemDetectedDistance = hit.distance;
+                return itemDetectedGO;
+                /*
+                if (itemDetected.Type == "Ore" && hit.distance < 2.2 && characterAnimator.beingBusy == false && characterAnimator.IS_MINED == 1)
+                {
+                    //Debug.Log("Seeing ore");
+                    characterAnimator.seeingOre();
+                }
+                if (itemDetected.Type == "Ore" && hit.distance < 2.2 && characterAnimator.beingBusy == false && characterAnimator.IS_ALCHEMY_MINED == 1)
+                {
+                    //Debug.Log("Seeing ore");
+                    characterAnimator.seeingOre();
+                    alchemyEnter.Play("AlchemyEnter");
+                    itemDetectedGO.transform.GetChild(0).gameObject.SetActive(true);
+                    itemDetectedGO.transform.GetChild(1).gameObject.SetActive(false);
+                }
+                if (itemDetected.Type == "Tree" && hit.distance < 1.2 && characterAnimator.beingBusy == false && characterAnimator.IS_MINED == 1)
+                {
+                    //Debug.Log("Seeing tree");
+                    characterAnimator.seeingTree();
+                }
+                if (itemDetected.Type == "Grass" && hit.distance < 1.6 && characterAnimator.beingBusy == false && characterAnimator.IS_MINED == 1)
+                {
+                    //Debug.Log("Seeing grass");
+                    characterAnimator.seeingGrass();
+                }*/
+            } else { return null; }
+
+            
             //Debug.Log(currentHitObject);
         }
         else
         {
             double distanceFromObject = maxDistance;
             GameObject Object = null;
+            return null;
         }
 
-        if (hit.collider != null)
-        {
-            itemDetected = hit.collider.GetComponent<IInventoryItem>();
-            itemDetectedGO = hit.collider.gameObject;
-            itemDetectedDistance = hit.distance;
-            if (itemDetected.Type == "Ore" && hit.distance < 2.2 && characterAnimator.beingBusy == false && characterAnimator.IS_MINED == 1)
-            {
-                //Debug.Log("Seeing ore");
-                characterAnimator.seeingOre();
-            }
-            if (itemDetected.Type == "Ore" && hit.distance < 2.2 && characterAnimator.beingBusy == false && characterAnimator.IS_ALCHEMY_MINED == 1)
-            {
-                //Debug.Log("Seeing ore");
-                characterAnimator.seeingOre();
-                alchemyEnter.Play("AlchemyEnter");
-                itemDetectedGO.transform.GetChild(0).gameObject.SetActive(true);
-                itemDetectedGO.transform.GetChild(1).gameObject.SetActive(false);
-            }
-            if (itemDetected.Type == "Tree" && hit.distance < 1.2 && characterAnimator.beingBusy == false && characterAnimator.IS_MINED == 1)
-            {
-                //Debug.Log("Seeing tree");
-                characterAnimator.seeingTree();
-            }
-            if (itemDetected.Type == "Grass" && hit.distance < 1.6 && characterAnimator.beingBusy == false && characterAnimator.IS_MINED == 1)
-            {
-                //Debug.Log("Seeing grass");
-                characterAnimator.seeingGrass();
-            }
-        }
+
+
     }
 
     public void detectToItems()

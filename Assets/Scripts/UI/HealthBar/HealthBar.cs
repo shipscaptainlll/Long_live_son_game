@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,21 +9,25 @@ public class HealthBar : MonoBehaviour
     [SerializeField]
     private Image foregroundImage;
     [SerializeField]
-    private float updateSpeedSeconds = 0.5f;
+    public float updateSpeedSeconds = 0.01f;
 
     private float barShowingLifeTime = 5f;
     float elapsedTimeBar;
     private IEnumerator coroutine;
 
+    public event Action OreMined = delegate { };
+
     private void Awake()
     {
         GetComponentInParent<Health>().OnHealthPctChanged += HandleHealthChanged;
-        
+
+
     }
 
     private void HandleHealthChanged(float pct)
     {
         //Debug.Log("3.HandleHealthChanged"); 
+        
         StartCoroutine(ChangeToPct(pct));
         
     }
@@ -36,23 +41,42 @@ public class HealthBar : MonoBehaviour
 
         
     }
-    
+
 
     private IEnumerator ChangeToPct(float pct)
     {
         //Debug.Log("4.ChangeToPct");
         float preChangePct = foregroundImage.fillAmount;
         float elapsed = 0f;
-
-        while (elapsed < updateSpeedSeconds)
+        if (foregroundImage.fillAmount > 0) { 
+            while (elapsed < updateSpeedSeconds)
         {
             elapsed += Time.deltaTime;
             foregroundImage.fillAmount = Mathf.Lerp(preChangePct, pct, elapsed / updateSpeedSeconds);
             yield return null;
         }
+        }
 
         foregroundImage.fillAmount = pct;
+        if (foregroundImage.fillAmount <= 0)
+        {
+            
+            resetOreHealth();
+            if (OreMined != null) {
+                OreMined();
+            }
+            
+
+
+        }
         //Debug.Log("5.ChangeToPctEnd");
+    }
+
+    private void resetOreHealth()
+    {
+        transform.parent.GetComponent<Health>().currentHealth = 100;
+        foregroundImage.fillAmount = 1;
+        //Debug.Log("Ore health restored");
     }
 
     private void LateUpdate()

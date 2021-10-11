@@ -22,6 +22,8 @@ public class PersonMovement : MonoBehaviour
     public Inventory inventory;
     public BottomInventory bottomInventory;
     public GameObject HUD;
+    public GameObject UpgradePanel;
+
     public CoinPurse mainCoinPurse;
     public Text coinCounterInventory;
 
@@ -57,7 +59,12 @@ public class PersonMovement : MonoBehaviour
     public GameObject slot2;
     public GameObject slot3;
 
-    
+    //QuickAcess
+    public GameObject QuickAccessPanel;
+    public QuickAccessController quickAccessController;
+
+    //Cargo panel
+    public GameObject CargoPanel;
 
     //Contacting with trees
     // public TreeAnimation treeAnimation;
@@ -84,7 +91,7 @@ public class PersonMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
@@ -116,13 +123,42 @@ public class PersonMovement : MonoBehaviour
             hand.transform.Find(toolNeeded).gameObject.SetActive(true);
             Debug.Log(slot1.GetComponent<ItemDragHandler>().Item.Name.ToString());
         }
+        if (Input.GetMouseButtonDown(1))
+        {
+
+            if (quickAccessController.currentlyOpened == null && quickAccessController.QAPIsOpened == false)
+            {
+                quickAccessController.openPanel();
+            } else if (quickAccessController.isToolOpened = true && quickAccessController.QAPIsOpened == false)
+            {
+                quickAccessController.closeCurrentlyOpened();
+                quickAccessController.openPanel();
+            }
+            else if (quickAccessController.currentlyOpened == null && quickAccessController.QAPIsOpened == true)
+            {
+                quickAccessController.closePanel();
+            }
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab))
+        {
+            if (quickAccessController.currentlyOpened != null && quickAccessController.QAPIsOpened == false)
+            {
+                quickAccessController.closeCurrentlyOpened();
+            } else if (quickAccessController.currentlyOpened == null && quickAccessController.QAPIsOpened == true)
+            {
+                quickAccessController.closePanel();
+            }
+        }
         if (Input.GetKeyDown(KeyCode.Z))
         {
             
             forceField.GetComponent<ForceField>().openSphere();
         }
         
-        if (HUD.GetComponent<CanvasGroup>().alpha == 1 || shopInventoryInterface.activeInHierarchy)
+        if (HUD.GetComponent<CanvasGroup>().alpha == 1 || shopInventoryInterface.activeInHierarchy || UpgradePanel.GetComponent<CanvasGroup>().alpha == 1 || QuickAccessPanel.GetComponent<CanvasGroup>().alpha == 1 ||
+            CargoPanel.GetComponent<CanvasGroup>().alpha == 1)
         {
             Cursor.lockState = CursorLockMode.Confined;
         } else { Cursor.lockState = CursorLockMode.Locked;
