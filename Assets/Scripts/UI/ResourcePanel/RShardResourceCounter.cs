@@ -21,7 +21,8 @@ public class RShardResourceCounter : MonoBehaviour
 
     public void Start()
     {
-        count = 100000;
+        count = 0;
+        //count = 100000;
         countToText = transform.Find("Counter").GetChild(0).GetComponent<Text>();
         mineSpeedToText = transform.Find("CounterPerMinute").Find("CounterText").GetComponent<Text>();
     }

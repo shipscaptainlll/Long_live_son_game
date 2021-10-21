@@ -6,10 +6,11 @@ using UnityEngine.UI;
 
 public class LogResourceCounter : MonoBehaviour
 {
-    private int count;
-    private float mineSpeedCount;
-    private Text countToText;
-    private Text mineSpeedToText;
+    public float count;
+    public float mineSpeedCount;
+    public Text countToText;
+    public Text mineSpeedToText;
+    public CargoResourceCounter cargoResourceCounter;
 
     public string Type
     {
@@ -26,7 +27,7 @@ public class LogResourceCounter : MonoBehaviour
     }
     
 
-    public void AddToCounter(int e)
+    public void AddToCounter(float e)
     {
         count += e;
         RefreshCounter(); 
@@ -40,11 +41,24 @@ public class LogResourceCounter : MonoBehaviour
 
     void RefreshCounter()
     {
-        countToText.text = count.ToString();
+        countToText.text = count.ToString("0");
+        SyncWithCargoCounter(); 
+    }
+    public void SyncWithCargoCounter()
+    {
+        cargoResourceCounter.count = count;
+        cargoResourceCounter.RefreshCounter();
     }
 
     void RefreshMineSpeedCounter()
     {
-        mineSpeedToText.text = mineSpeedCount.ToString();
+        mineSpeedToText.text = mineSpeedCount.ToString("0.0");
+        SyncWithCargoSpeedCounter();
+    }
+
+    public void SyncWithCargoSpeedCounter()
+    {
+        cargoResourceCounter.mineSpeedCount = mineSpeedCount;
+        cargoResourceCounter.RefreshMineSpeedCounter();
     }
 }

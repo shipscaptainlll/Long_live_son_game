@@ -16,12 +16,38 @@ public class UBScissors : MonoBehaviour
     private Text upgradeCostCounter;
     public GameObject upgradeBar;
     private Image upgradeBarImage;
-    
+
+    //Number of available
+    public GameObject totalObjectHolder;
+    public List<GameObject> totalObjects;
+    public Button buyNewToolButton;
+    public int toolsBought;
+    public int toolsBoughtMax = 4;
+    public float toolNumberUpgradeCost;
+    public float toolNumberUpgradeCostMultiplier;
+    public Text toolNumberUpgradeCostCounter;
+    public RShardResourceCounter rShardResourceCounter;
+    public ScissorsToolsPanel scissorsToolsPanel;
 
     public event Action<float, int> toolParametersRefreshed = delegate { };
+    public event Action<int> newToolBought = delegate { };
     // Start is called before the first frame update
     void Start()
     {
+        totalObjects = new List<GameObject>();
+        toolsBought = 0;
+        toolsBoughtMax = 4;
+        toolNumberUpgradeCost = 50;
+        toolNumberUpgradeCostMultiplier = 2.7f;
+        for (int i = 0; i < toolsBoughtMax; i++)
+        {
+            totalObjects.Add(totalObjectHolder.transform.GetChild(i).gameObject);
+
+        }
+        toolNumberCostCounterRefresh();
+        buyNewToolButton.onClick.AddListener(buyNewTool);
+        scissorsToolsPanel.enabled = true;
+
         toolLevel = 1;
         upgradeCost = 10;
         toolSpeed = 1;
@@ -43,7 +69,7 @@ public class UBScissors : MonoBehaviour
 
     void RefreshUpgradeCostCounter()
     {
-        upgradeCostCounter.text = upgradeCost.ToString(); Debug.Log(upgradeCost);
+        upgradeCostCounter.text = upgradeCost.ToString(); //Debug.Log(upgradeCost);
     }
 
     void RefreshUpgradeBar()
@@ -99,5 +125,59 @@ public class UBScissors : MonoBehaviour
         StartCoroutine(upgradeBarTest(upgradeBarFillAmmount));
         //RefreshUpgradeBar();
         refreshToolInstanceParameters(toolSpeed, toolLevel);
+    }
+
+    public void buyNewTool()
+    {
+        if (toolsBought < toolsBoughtMax && toolNumberUpgradeCost <= rShardResourceCounter.count)
+        {
+            toolsBought += 1;
+            refreshToolsUI();
+            rShardResourceCounter.AddToCounter(-toolNumberUpgradeCost);
+            toolNumberCostIncrease();
+            newToolBought(toolsBought);
+
+        }
+        else if (toolsBought >= toolsBoughtMax)
+        {
+            Debug.Log("Reached max tools");
+        }
+        else if (toolNumberUpgradeCost > rShardResourceCounter.count)
+        {
+            Debug.Log("Too costy");
+            Debug.Log("Upgrade cost: " + toolNumberUpgradeCost + " magic shards");
+            Debug.Log("You have: " + rShardResourceCounter.count + " ms");
+        }
+    }
+
+    public void refreshToolsUI()
+    {
+        for (int i = 0; i < toolsBought; i++)
+        {
+            totalObjects[i].transform.GetChild(0).GetComponent<Image>().enabled = true;
+        }
+    }
+
+    public void toolNumberCostIncrease()
+    {
+        toolNumberUpgradeCost *= toolNumberUpgradeCostMultiplier;
+        if (toolsBought < toolsBoughtMax)
+        {
+            toolNumberCostCounterRefresh();
+        }
+        else if (toolsBought >= toolsBoughtMax)
+        {
+            toolNumberCostCounterRefresh(1);
+        }
+
+    }
+
+    public void toolNumberCostCounterRefresh()
+    {
+        toolNumberUpgradeCostCounter.text = toolNumberUpgradeCost.ToString("0");
+    }
+    public void toolNumberCostCounterRefresh(int i)
+    {
+        toolNumberUpgradeCostCounter.text = "MAX";
     }
 }

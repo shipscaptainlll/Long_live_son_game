@@ -8,6 +8,7 @@ public class InputController : MonoBehaviour
     public int low = 1;
     public InteractionController interactionController;
     public event Action<int> countChanged= delegate { };
+    //public event Action<float> somethingDetected = delegate { };
 
     void Update()
     {
@@ -19,10 +20,14 @@ public class InputController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            
+            //somethingDetected(1f);
             interactionController.InteractWithObject();
             
         }
+        if (Input.GetMouseButtonDown(0))
+        {
+            interactionController.InteractManuallyWithObject();
+        } 
 
     }
 }

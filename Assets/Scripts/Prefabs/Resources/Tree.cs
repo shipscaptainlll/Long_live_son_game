@@ -9,6 +9,7 @@ public class Tree : MonoBehaviour, IResource
     public LogResourceCounter treeResourceCounter;
     public RShardResourceCounter tshardResourceCounter;
     public int toolLevel;
+    public bool isProcessedManually = false;
     public float miningSpeed = 0f;
     public float miningShardSpeed = 0f;
     public Animator miningAnimation;
@@ -40,6 +41,8 @@ public class Tree : MonoBehaviour, IResource
     public float costShard;
     public UBAxe uBAxe;
 
+    public bool timerStarted = false;
+    public int timeElapsedSinceStart;
     void Start()
     {
         uBAxe.toolParametersRefreshed += refreshToolParameters;
@@ -96,5 +99,19 @@ public class Tree : MonoBehaviour, IResource
         float negativeShardMiningSpeed = -miningShardSpeed;
         treeResourceCounter.AddToMineSpeedCounter((float)negativeMiningSpeed);
         tshardResourceCounter.AddToMineSpeedCounter((float)negativeShardMiningSpeed);
+    }
+
+    public IEnumerator hideHealthBar()
+    {
+        timerStarted = true;
+        timeElapsedSinceStart = 0;
+        while (timeElapsedSinceStart < 3)
+        {
+            yield return new WaitForSeconds(1);
+            timeElapsedSinceStart++;
+        }
+        timerStarted = false;
+        if (isProcessed == false) { transform.Find("HealthBarCanvas").gameObject.SetActive(false); }
+
     }
 }

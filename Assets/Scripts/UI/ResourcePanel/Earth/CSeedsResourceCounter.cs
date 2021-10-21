@@ -6,10 +6,11 @@ using UnityEngine.UI;
 
 public class CSeedsResourceCounter : MonoBehaviour
 {
-    private int count;
-    private float mineSpeedCount;
-    private Text countToText;
-    private Text mineSpeedToText;
+    public float count;
+    public float mineSpeedCount;
+    public Text countToText;
+    public Text mineSpeedToText;
+    public CargoResourceCounter cargoResourceCounter;
 
     public string Type
     {
@@ -26,7 +27,7 @@ public class CSeedsResourceCounter : MonoBehaviour
     }
     
 
-    public void AddToCounter(int e)
+    public void AddToCounter(float e)
     {
         count += e;
         RefreshCounter(); 
@@ -46,13 +47,24 @@ public class CSeedsResourceCounter : MonoBehaviour
         float roundItUp = Mathf.Round(count * 10.0f);
         float roundAgain = roundItUp * 0.1f;
         countToText.text = roundAgain.ToString();
+        SyncWithCargoCounter();
     }
-
+    public void SyncWithCargoCounter()
+    {
+        cargoResourceCounter.count = count;
+        cargoResourceCounter.RefreshCounter();
+    }
     void RefreshMineSpeedCounter()
     {
         float roundItUp = Mathf.Round(mineSpeedCount * 10.0f);
         float roundAgain = roundItUp * 0.1f;
         Debug.Log(roundAgain);
         mineSpeedToText.text = roundAgain.ToString();
+        SyncWithCargoSpeedCounter();
+    }
+    public void SyncWithCargoSpeedCounter()
+    {
+        cargoResourceCounter.mineSpeedCount = mineSpeedCount;
+        cargoResourceCounter.RefreshMineSpeedCounter();
     }
 }

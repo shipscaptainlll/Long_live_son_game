@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CargoResourceCounter : MonoBehaviour
+public class CargoResourceCounterOld : MonoBehaviour
 {
     public int count;
     public float mineSpeedCount;

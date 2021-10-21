@@ -6,10 +6,11 @@ using UnityEngine.UI;
 
 public class MBagResourceCounter : MonoBehaviour
 {
-    private int count;
+    public int count;
     private float mineSpeedCount;
     private Text countToText;
     private Text mineSpeedToText;
+    public CargoResourceCounter cargoResourceCounter;
 
     public string Type
     {
@@ -41,10 +42,21 @@ public class MBagResourceCounter : MonoBehaviour
     void RefreshCounter()
     {
         countToText.text = count.ToString();
+        SyncWithCargoCounter();
     }
-
+    public void SyncWithCargoCounter()
+    {
+        cargoResourceCounter.count = count;
+        cargoResourceCounter.RefreshCounter();
+    }
     void RefreshMineSpeedCounter()
     {
         mineSpeedToText.text = mineSpeedCount.ToString();
+        SyncWithCargoSpeedCounter();
+    }
+    public void SyncWithCargoSpeedCounter()
+    {
+        cargoResourceCounter.mineSpeedCount = mineSpeedCount;
+        cargoResourceCounter.RefreshMineSpeedCounter();
     }
 }

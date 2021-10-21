@@ -23,9 +23,26 @@ public class PersonMovement : MonoBehaviour
     public BottomInventory bottomInventory;
     public GameObject HUD;
     public GameObject UpgradePanel;
+    public GameObject MeditationPanel;
+    public GameObject TreeUpgradePanel;
+    public GameObject FarmUpgradePanel;
 
     public CoinPurse mainCoinPurse;
     public Text coinCounterInventory;
+
+    //Resources
+    public RockResourceCounter rockResourceCounter;
+    public LogResourceCounter logResourceCounter;
+    public RShardResourceCounter rShardResourceCounter;
+    public GoldResourceCounter goldResourceCounter;
+    public WaterResourceCounter waterResourceCounter;
+    public GrassResourceCounter grassResourceCounter;
+    public ManureResourceCounter manureResourceCounter;
+    public MBagResourceCounter mBagResourceCounter;
+    public CarrotResourceCounter carrotResourceCounter;
+    public AppleResourceCounter appleResourceCounter;
+    public CSeedsResourceCounter cSeedsResourceCounter;
+    public ASeedsResourceCounter aSeedsResourceCounter;
 
     //Images
     public Image InventoryLockState;
@@ -86,12 +103,14 @@ public class PersonMovement : MonoBehaviour
         mainCoinPurse.coinAmmount = 0;
         ButtonController.text = null;
         coinCounterInventory.text = mainCoinPurse.coinAmmount.ToString();
+        
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
@@ -129,10 +148,14 @@ public class PersonMovement : MonoBehaviour
             if (quickAccessController.currentlyOpened == null && quickAccessController.QAPIsOpened == false)
             {
                 quickAccessController.openPanel();
-            } else if (quickAccessController.isToolOpened = true && quickAccessController.QAPIsOpened == false)
+            } else if (quickAccessController.isToolOpened == true && quickAccessController.QAPIsOpened == false)
             {
                 quickAccessController.closeCurrentlyOpened();
                 quickAccessController.openPanel();
+            }
+            else if (quickAccessController.isPanelOpened == true && quickAccessController.QAPIsOpened == false)
+            {
+                quickAccessController.closeCurrentlyOpened();
             }
             else if (quickAccessController.currentlyOpened == null && quickAccessController.QAPIsOpened == true)
             {
@@ -158,7 +181,7 @@ public class PersonMovement : MonoBehaviour
         }
         
         if (HUD.GetComponent<CanvasGroup>().alpha == 1 || shopInventoryInterface.activeInHierarchy || UpgradePanel.GetComponent<CanvasGroup>().alpha == 1 || QuickAccessPanel.GetComponent<CanvasGroup>().alpha == 1 ||
-            CargoPanel.GetComponent<CanvasGroup>().alpha == 1)
+            CargoPanel.GetComponent<CanvasGroup>().alpha == 1 || MeditationPanel.GetComponent<CanvasGroup>().alpha == 1 || TreeUpgradePanel.GetComponent<CanvasGroup>().alpha == 1 || FarmUpgradePanel.GetComponent<CanvasGroup>().alpha == 1 )
         {
             Cursor.lockState = CursorLockMode.Confined;
         } else { Cursor.lockState = CursorLockMode.Locked;
@@ -191,6 +214,22 @@ public class PersonMovement : MonoBehaviour
         {
             ButtonController.text = "I";
             ButtonController2.text = " ";
+        }
+        
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            rockResourceCounter.AddToCounter(10000);
+            logResourceCounter.AddToCounter(10000);
+            rShardResourceCounter.AddToCounter(10000);
+            goldResourceCounter.AddToCounter(10000);
+            waterResourceCounter.AddToCounter(10000);
+            grassResourceCounter.AddToCounter(10000);
+            manureResourceCounter.AddToCounter(10000);
+            mBagResourceCounter.AddToCounter(10000);
+            carrotResourceCounter.AddToCounter(10000);
+            appleResourceCounter.AddToCounter(10000);
+            cSeedsResourceCounter.AddToCounter(10000);
+            aSeedsResourceCounter.AddToCounter(10000);
         }
         if (Input.GetKeyUp(KeyCode.I))
         {

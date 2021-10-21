@@ -6,14 +6,14 @@ using UnityEngine.UI;
 
 public class RockResourceCounter : MonoBehaviour
 {
-    public int count;
-    private float mineSpeedCount;
+    public float count;
+    public float mineSpeedCount;
     private Text countToText;
     private Text mineSpeedToText;
 
     //Cargo panel
     public CargoResourceCounter cargoResourceCounter;
-
+    public event Action<float> rocksMined;
     public string Type
     {
         get
@@ -29,10 +29,14 @@ public class RockResourceCounter : MonoBehaviour
     }
     
 
-    public void AddToCounter(int e)
+    public void AddToCounter(float e)
     {
         count += e;
-        RefreshCounter(); 
+        RefreshCounter();
+        if (rocksMined != null)
+        {
+            rocksMined(e);
+        }
     }
 
     public void AddToMineSpeedCounter(float e)
@@ -44,25 +48,25 @@ public class RockResourceCounter : MonoBehaviour
         RefreshMineSpeedCounter();
     }
 
-    void RefreshCounter()
+    public void RefreshCounter()
     {        
-        countToText.text = count.ToString();
+        countToText.text = count.ToString("0");
         SyncWithCargoCounter();
     }
 
-    void SyncWithCargoCounter()
+    public void SyncWithCargoCounter()
     {
         cargoResourceCounter.count = count;
         cargoResourceCounter.RefreshCounter();
     }
 
-    void RefreshMineSpeedCounter()
+    public void RefreshMineSpeedCounter()
     {
         mineSpeedToText.text = mineSpeedCount.ToString("0.00");
         SyncWithCargoSpeedCounter();
     }
 
-    void SyncWithCargoSpeedCounter()
+    public void SyncWithCargoSpeedCounter()
     {
         cargoResourceCounter.mineSpeedCount = mineSpeedCount;
         cargoResourceCounter.RefreshMineSpeedCounter();

@@ -30,7 +30,7 @@ public class Upgrades_Manager : MonoBehaviour
 
 	void PickAxeOnClick()
 	{
-		Debug.Log("Hello");
+		//Debug.Log("Hello");
 		if (rShardResourceCounter.count >= PPickAxe.upgradeCost && PPickAxe.toolLevel <= 24)
         {
 			
@@ -42,7 +42,7 @@ public class Upgrades_Manager : MonoBehaviour
 
 	void ScissorsOnClick()
 	{
-		Debug.Log("Hello");
+		//Debug.Log("Hello");
 		if (rShardResourceCounter.count >= PScissors.upgradeCost && PScissors.toolLevel <= 9)
 		{
 			rShardResourceCounter.SubtractFromCounter(PScissors.upgradeCost);
@@ -53,7 +53,7 @@ public class Upgrades_Manager : MonoBehaviour
 
 	void BucketOnClick()
 	{
-		Debug.Log("Hello");
+		//Debug.Log("Hello");
 		if (rShardResourceCounter.count >= PBucket.upgradeCost && PBucket.toolLevel <= 9)
 		{
 			rShardResourceCounter.SubtractFromCounter(PBucket.upgradeCost);

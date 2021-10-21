@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,10 +7,39 @@ public class InteractionController : MonoBehaviour
 {
     public MouseRotation camera;
     public GrassResourceCounter grassResourceCounter;
+    public InputController inputController;
+
+    //pickaxetoolpanel
+    public PickAxeToolsPanel pickAxeToolsPanel;
+    public event Action<int> contactedBoulder = delegate { };
+
+    //scissorstoolpanel
+    public ScissorsToolsPanel scissorsToolsPanel;
+    public event Action<int> contactedMoss = delegate { };
+
+    //buckettoolpanel
+    public BucketToolsPanel bucketToolsPanel;
+    public event Action<int> contactedWell = delegate { };
+
+    //axetoolpanel
+    public AxeToolsPanel axeToolsPanel;
+    public event Action<int> contactedTree = delegate { };
+
+    //grass tent
+    public FUPGrassTent fUPGrassTent;
+
+    //Manually mine
+    public Animator characterAnimator;
+    public GameObject lastContactedObject;
+    public GameObject axe;
+    public GameObject pickAxe;
+
+    //Quests
+    public event Action startedRockoreAutomining = delegate { }; //Send notification that started ore auto mining to fourth quest
     // Start is called before the first frame update
     void Start()
     {
-        
+        //inputController.somethingDetected += InteractWithObject;
     }
 
     // Update is called once per frame
@@ -54,7 +84,7 @@ public class InteractionController : MonoBehaviour
 
     private void BoulderInteract(GameObject boulder)
     {
-        if (boulder.GetComponent<Boulder>().isProcessed == false)
+        if (boulder.GetComponent<Boulder>().isProcessed == false && pickAxeToolsPanel.gameObject.GetComponent<CanvasGroup>().alpha == 1 && pickAxeToolsPanel.toolsUsed < pickAxeToolsPanel.toolsCount)
         {
             boulder.transform.Find("HealthBarCanvas").gameObject.SetActive(true);
             GameObject pickAxe = boulder.transform.Find("Pickaxe").gameObject;
@@ -62,10 +92,21 @@ public class InteractionController : MonoBehaviour
             boulder.GetComponent<Boulder>().isProcessed = true;
             pickAxe.GetComponent<Animator>().Play("AMining");
             boulder.GetComponent<Boulder>().calculateMiningSpeed();
+            //??
+            if (contactedBoulder != null)
+            {
+                contactedBoulder(1);
+            }
+            //Send notification to fourth quest, that rock ore auto mining started
+            if (startedRockoreAutomining != null)
+            {
+                startedRockoreAutomining();
+            }
+            
             //Debug.Log("Activated");
         }
 
-        else if (boulder.GetComponent<Boulder>().isProcessed == true)
+        else if (boulder.GetComponent<Boulder>().isProcessed == true && pickAxeToolsPanel.gameObject.GetComponent<CanvasGroup>().alpha == 1)
         {
             GameObject pickAxe = boulder.transform.Find("Pickaxe").gameObject;
             boulder.GetComponent<Boulder>().isProcessed = false;
@@ -73,12 +114,13 @@ public class InteractionController : MonoBehaviour
             pickAxe.GetComponent<Animator>().Play("NewState");
             pickAxe.SetActive(false);
             boulder.transform.Find("HealthBarCanvas").gameObject.SetActive(false);
+            contactedBoulder(0);
         }
     }
 
     private void TreeInteract(GameObject tree)
     {
-        if (tree.transform.parent.parent.GetComponent<Tree>().isProcessed == false)
+        if (tree.transform.parent.parent.GetComponent<Tree>().isProcessed == false && axeToolsPanel.gameObject.GetComponent<CanvasGroup>().alpha == 1 && axeToolsPanel.toolsUsed < axeToolsPanel.toolsCount)
         {
             tree.transform.parent.parent.Find("HealthBarCanvas").gameObject.SetActive(true);
             GameObject axe = tree.transform.parent.parent.Find("Axe").gameObject;
@@ -86,10 +128,11 @@ public class InteractionController : MonoBehaviour
             tree.transform.parent.parent.GetComponent<Tree>().isProcessed = true;
             axe.GetComponent<Animator>().Play("AMining");
             tree.transform.parent.parent.GetComponent<Tree>().calculateMiningSpeed();
+            contactedTree(1);
             //Debug.Log("Activated");
         }
 
-        else if (tree.transform.parent.parent.GetComponent<Tree>().isProcessed == true)
+        else if (tree.transform.parent.parent.GetComponent<Tree>().isProcessed == true && axeToolsPanel.gameObject.GetComponent<CanvasGroup>().alpha == 1)
         {
             GameObject axe = tree.transform.parent.parent.Find("Axe").gameObject;
             tree.transform.parent.parent.GetComponent<Tree>().isProcessed = false;
@@ -97,12 +140,13 @@ public class InteractionController : MonoBehaviour
             axe.GetComponent<Animator>().Play("NewState");
             axe.SetActive(false);
             tree.transform.parent.parent.Find("HealthBarCanvas").gameObject.SetActive(false);
+            contactedTree(0);
         }
     }
 
     private void WellInteract(GameObject well)
     {
-        if (well.transform.parent.parent.GetComponent<Well>().isProcessed == false)
+        if (well.transform.parent.parent.GetComponent<Well>().isProcessed == false && bucketToolsPanel.gameObject.GetComponent<CanvasGroup>().alpha == 1 && bucketToolsPanel.toolsUsed < bucketToolsPanel.toolsCount)
         {
             well.transform.parent.parent.Find("HealthBarCanvas").gameObject.SetActive(true);
             well.transform.parent.parent.Find("HealthBarCanvas").gameObject.GetComponent<CanvasGroup>().alpha = 0f;
@@ -111,10 +155,11 @@ public class InteractionController : MonoBehaviour
             well.transform.parent.parent.GetComponent<Well>().isProcessed = true;
             bucket_well.GetComponent<Animator>().Play("AMining");
             well.transform.parent.parent.GetComponent<Well>().calculateMiningSpeed();
+            contactedWell(1);
             //Debug.Log("Activated");
         }
 
-        else if (well.transform.parent.parent.GetComponent<Well>().isProcessed == true)
+        else if (well.transform.parent.parent.GetComponent<Well>().isProcessed == true && bucketToolsPanel.gameObject.GetComponent<CanvasGroup>().alpha == 1)
         {
             GameObject bucket_well = well.transform.parent.parent.Find("Bucket").gameObject;
             well.transform.parent.parent.GetComponent<Well>().isProcessed = false;
@@ -122,12 +167,13 @@ public class InteractionController : MonoBehaviour
             bucket_well.GetComponent<Animator>().Play("NewState");
             bucket_well.SetActive(false);
             well.transform.parent.parent.Find("HealthBarCanvas").gameObject.SetActive(false);
+            contactedWell(0);
         }
     }
 
     private void MossInteract(GameObject moss)
     {
-        if (moss.transform.parent.GetComponent<Moss>().isProcessed == false)
+        if (moss.transform.parent.GetComponent<Moss>().isProcessed == false && scissorsToolsPanel.gameObject.GetComponent<CanvasGroup>().alpha == 1 && scissorsToolsPanel.toolsUsed < scissorsToolsPanel.toolsCount && fUPGrassTent.isConstructed == true)
         {
             moss.transform.parent.Find("HealthBarCanvas").gameObject.SetActive(true);
             moss.transform.parent.Find("HealthBarCanvas").gameObject.GetComponent<CanvasGroup>().alpha = 0f;
@@ -139,10 +185,11 @@ public class InteractionController : MonoBehaviour
             scissors_Moss.GetComponent<Animator>().Play("AMining");
             scissors1_Moss.GetComponent<Animator>().Play("AMining1");
             moss.transform.parent.GetComponent<Moss>().calculateMiningSpeed();
+            contactedMoss(1);
             //Debug.Log("Activated");
         }
 
-        else if (moss.transform.parent.GetComponent<Moss>().isProcessed == true)
+        else if (moss.transform.parent.GetComponent<Moss>().isProcessed == true && scissorsToolsPanel.gameObject.GetComponent<CanvasGroup>().alpha == 1)
         {
             GameObject scissors_Moss = moss.transform.parent.Find("Scissors").gameObject;
             GameObject scissors1_Moss = moss.transform.parent.Find("Scissors1").gameObject;
@@ -153,6 +200,7 @@ public class InteractionController : MonoBehaviour
             scissors_Moss.SetActive(false);
             scissors1_Moss.SetActive(false);
             moss.transform.parent.Find("HealthBarCanvas").gameObject.SetActive(false);
+            contactedMoss(0);
         }
     }
 
@@ -237,5 +285,75 @@ public class InteractionController : MonoBehaviour
             upgradeOpener.GetComponent<Upgrade_Opener>().ClosePanel();
             //foodBowl.transform.Find("HealthBarCanvas").gameObject.SetActive(false);
         }
+    }
+
+    public void InteractManuallyWithObject()
+    {
+        GameObject objectDetected = camera.detectObject();
+        //Debug.Log(objectDetected);
+        //Debug.Log(objectDetected);
+        if (objectDetected != null && objectDetected.GetComponent<IResource>() != null && objectDetected.GetComponent<IResource>().Type == "Boulder")
+        {
+            BoulderInteractManually(objectDetected);
+        }
+        else if (objectDetected != null && objectDetected.transform.parent.parent.GetComponent<IResource>() != null && objectDetected.transform.parent.parent.GetComponent<IResource>().Type == "Tree")
+        {
+            TreeInteractManually(objectDetected);
+        } else { 
+            //Debug.Log("Nothing found"); 
+        }
+        //Debug.Log(objectDetected);
+    }
+
+    public void BoulderInteractManually(GameObject boulder)
+    {
+        
+            pickAxe.SetActive(true);
+            lastContactedObject = boulder;
+            boulder.transform.Find("HealthBarCanvas").gameObject.SetActive(true);
+            boulder.GetComponent<Boulder>().isProcessedManually = true;
+            characterAnimator.Play("Mining ore");
+            //Debug.Log("Hello");
+            //boulder.GetComponent<Boulder>().calculateMiningSpeed();
+            //Debug.Log("Activated");
+        
+    }
+
+    public void stopBoulderInteractManually()
+    {
+        lastContactedObject.GetComponent<Boulder>().isProcessedManually = false;
+        lastContactedObject.GetComponent<Health>().ModifyHealth(-50);
+        lastContactedObject.GetComponent<Boulder>().timeElapsedSinceStart = 0;
+        if (lastContactedObject.GetComponent<Boulder>().timerStarted == false) { StartCoroutine(lastContactedObject.GetComponent<Boulder>().hideHealthBar()); }
+        
+        lastContactedObject = null;
+        pickAxe.SetActive(false);
+    }
+
+
+    public void TreeInteractManually(GameObject tree)
+    {
+        if (tree.transform.parent.parent.GetComponent<Tree>().isProcessedManually == false)
+        {
+            axe.SetActive(true);
+            lastContactedObject = tree;
+            tree.transform.parent.parent.Find("HealthBarCanvas").gameObject.SetActive(true);
+            tree.transform.parent.parent.GetComponent<Tree>().isProcessedManually = true;
+            characterAnimator.Play("Chopping Tree");
+            //Debug.Log("Hello tree");
+            //boulder.GetComponent<Boulder>().calculateMiningSpeed();
+            //Debug.Log("Activated");
+        }
+    }
+
+    public void stopTreeInteractManually()
+    {
+        lastContactedObject.transform.parent.parent.GetComponent<Tree>().isProcessedManually = false;
+        lastContactedObject.transform.parent.parent.GetComponent<Health>().ModifyHealth(-50);
+        lastContactedObject.transform.parent.parent.GetComponent<Tree>().timeElapsedSinceStart = 0;
+        if (lastContactedObject.transform.parent.parent.GetComponent<Tree>().timerStarted == false) { StartCoroutine(lastContactedObject.transform.parent.parent.GetComponent<Tree>().hideHealthBar()); }
+
+        lastContactedObject = null;
+        axe.SetActive(false);
     }
 }

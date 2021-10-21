@@ -9,6 +9,7 @@ public class Boulder : MonoBehaviour, IResource
     public RockResourceCounter rockResourceCounter;
     public RShardResourceCounter rshardResourceCounter;
     public int toolLevel;
+    public bool isProcessedManually = false;
     public float miningSpeed = 0f;
     public float miningShardSpeed = 0f;
     public Animator miningAnimation;
@@ -39,6 +40,9 @@ public class Boulder : MonoBehaviour, IResource
     public float cost;
     public float costShard;
     public UBPickAxe uBPickAxe;
+
+    public bool timerStarted = false;
+    public int timeElapsedSinceStart;
 
     void Start()
     {
@@ -98,5 +102,19 @@ public class Boulder : MonoBehaviour, IResource
         float negativeShardMiningSpeed = -miningShardSpeed;
         rockResourceCounter.AddToMineSpeedCounter((float)negativeMiningSpeed);
         rshardResourceCounter.AddToMineSpeedCounter((float)negativeShardMiningSpeed);
+    }
+
+    public IEnumerator hideHealthBar()
+    {
+        timerStarted = true;
+        timeElapsedSinceStart = 0;
+        while (timeElapsedSinceStart < 3)
+        {
+            yield return new WaitForSeconds(1);
+            timeElapsedSinceStart++;
+        }
+        timerStarted = false;
+        if (isProcessed == false) { transform.Find("HealthBarCanvas").gameObject.SetActive(false); }
+        
     }
 }

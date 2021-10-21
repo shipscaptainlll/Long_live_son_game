@@ -19,6 +19,8 @@ public class CharacterAnimation : MonoBehaviour
 
     //HealthBar
     public Health itemHealth;
+
+    public InteractionController interactionController;
     // Start is called before the first frame update
     void Start()
     {
@@ -181,5 +183,15 @@ public class CharacterAnimation : MonoBehaviour
         beingBusy = false;
         mouseRotation.mouseSensitivity = 100;
         personMovement.speed = 10;
+    }
+
+    public void stopMunallyCollectingOre()
+    {
+        interactionController.stopBoulderInteractManually();
+    }
+
+    public void stopMunallyCollectingTree()
+    {
+        interactionController.stopTreeInteractManually();
     }
 }

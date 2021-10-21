@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,7 +25,7 @@ public class MouseRotation : MonoBehaviour
     public IInventoryItem itemDetected;
     private GameObject currentHitObject;
     public float currentHitObjectDistance;
-    public float maxDistance = 50;
+    public float maxDistance = 3;
     public LayerMask currentObjectLayerMask;
     public PersonMovement personMovement;
     public PersonMovement personMovement1;
@@ -47,6 +48,10 @@ public class MouseRotation : MonoBehaviour
     //HealthBar
     public Animator anim;
 
+    //Interract
+    public Text clickToInterractText;
+    public event Action rockOreDetected = delegate { };
+
     // Start is called before the first frame update
     void Start()
     {
@@ -66,15 +71,72 @@ public class MouseRotation : MonoBehaviour
             float yRot = Input.GetAxis("Mouse Y") * Time.deltaTime * mouseSensitivity;
 
             yRotation -= yRot * 2;
-            yRotation = Mathf.Clamp(yRotation, -90f, 40f);
+            yRotation = Mathf.Clamp(yRotation, -90f, 50f);
 
             transform.localRotation = Quaternion.Euler(yRotation, 40.6216583f, 0f);
 
             characterBody.Rotate(Vector3.up * xRot * 3);
         }
+
+        RaycastHit hit = new RaycastHit();
+
+        if (Physics.SphereCast(transform.position, 1.0f, transform.TransformDirection(Vector3.forward * 3), out hit, 1.5f, currentObjectLayerMask))
+        {
+            GameObject Object = hit.transform.gameObject;
+            double distanceFromObject = hit.distance;
+
+            if (hit.collider != null )
+            {
+                
+                itemDetectedGO = hit.collider.gameObject;
+                itemDetectedDistance = hit.distance;
+                clickToInterractText.gameObject.SetActive(true);
+                //Detecting rock ore for the first quest
+                if (itemDetectedGO.GetComponent<IResource>() != null && itemDetectedGO.GetComponent<IResource>().Type == "Boulder")
+                {
+                    rockOreDetected();
+                } else { }
+                
+                /*
+                if (itemDetected.Type == "Ore" && hit.distance < 2.2 && characterAnimator.beingBusy == false && characterAnimator.IS_MINED == 1)
+                {
+                    //Debug.Log("Seeing ore");
+                    characterAnimator.seeingOre();
+                }
+                if (itemDetected.Type == "Ore" && hit.distance < 2.2 && characterAnimator.beingBusy == false && characterAnimator.IS_ALCHEMY_MINED == 1)
+                {
+                    //Debug.Log("Seeing ore");
+                    characterAnimator.seeingOre();
+                    alchemyEnter.Play("AlchemyEnter");
+                    itemDetectedGO.transform.GetChild(0).gameObject.SetActive(true);
+                    itemDetectedGO.transform.GetChild(1).gameObject.SetActive(false);
+                }
+                if (itemDetected.Type == "Tree" && hit.distance < 1.2 && characterAnimator.beingBusy == false && characterAnimator.IS_MINED == 1)
+                {
+                    //Debug.Log("Seeing tree");
+                    characterAnimator.seeingTree();
+                }
+                if (itemDetected.Type == "Grass" && hit.distance < 1.6 && characterAnimator.beingBusy == false && characterAnimator.IS_MINED == 1)
+                {
+                    //Debug.Log("Seeing grass");
+                    characterAnimator.seeingGrass();
+                }*/
+            }
+            
+
+
+            //Debug.Log(currentHitObject);
+        }
+        else
+        {
+            double distanceFromObject = maxDistance;
+            GameObject Object = null;
+            //Debug.Log("Nothing really detected");
+            clickToInterractText.gameObject.SetActive(false);
+        }
         //Camera controll
-        
-        
+
+
         /*
         RaycastHit hit = new RaycastHit();
 
@@ -171,9 +233,6 @@ public class MouseRotation : MonoBehaviour
             GameObject Object = null;
             return null;
         }
-
-
-
     }
 
     public void detectToItems()
