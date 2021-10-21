@@ -50,7 +50,8 @@ public class MouseRotation : MonoBehaviour
 
     //Interract
     public Text clickToInterractText;
-    public event Action rockOreDetected = delegate { };
+    public event Action rockOreDetected = delegate { }; //Send notification that character found rock ore to first quest
+    public event Action mossDetected = delegate { }; //Send notification that character found moss to eighth quest
 
     // Start is called before the first frame update
     void Start()
@@ -79,22 +80,28 @@ public class MouseRotation : MonoBehaviour
         }
 
         RaycastHit hit = new RaycastHit();
-
-        if (Physics.SphereCast(transform.position, 1.0f, transform.TransformDirection(Vector3.forward * 3), out hit, 1.5f, currentObjectLayerMask))
+        
+        if (Physics.SphereCast(transform.position, 1.0f, transform.TransformDirection(Vector3.forward * 3), out hit, 2f, currentObjectLayerMask))
         {
             GameObject Object = hit.transform.gameObject;
             double distanceFromObject = hit.distance;
-
+            
             if (hit.collider != null )
             {
                 
                 itemDetectedGO = hit.collider.gameObject;
                 itemDetectedDistance = hit.distance;
                 clickToInterractText.gameObject.SetActive(true);
+                Debug.Log(itemDetectedGO.transform.parent.GetComponent<IResource>());
+                Debug.Log(itemDetectedGO.transform.parent.GetComponent<IResource>().Type);
                 //Detecting rock ore for the first quest
-                if (itemDetectedGO.GetComponent<IResource>() != null && itemDetectedGO.GetComponent<IResource>().Type == "Boulder")
+                if (rockOreDetected != null && itemDetectedGO.GetComponent<IResource>() != null && itemDetectedGO.GetComponent<IResource>().Type == "Boulder")
                 {
-                    rockOreDetected();
+                    rockOreDetected(); //Send notification that character found rock ore to first quest
+                } else if (mossDetected != null && itemDetectedGO.transform.parent.GetComponent<IResource>() != null && itemDetectedGO.transform.parent.GetComponent<IResource>().Type == "Moss")
+                {
+                    //Debug.Log("Something");
+                    mossDetected(); //Send notification that character found moss to eighth quest
                 } else { }
                 
                 /*

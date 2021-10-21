@@ -31,6 +31,8 @@ public class UBBucket : MonoBehaviour
 
     public event Action<float, int> toolParametersRefreshed = delegate { };
     public event Action<int> newToolBought = delegate { };
+
+    public event Action bucketConjured = delegate { }; //Create an event for sixth quest - learn bucket conjuration
     // Start is called before the first frame update
     void Start()
     {
@@ -130,6 +132,10 @@ public class UBBucket : MonoBehaviour
     {
         if (toolsBought < toolsBoughtMax && toolNumberUpgradeCost <= rShardResourceCounter.count)
         {
+            if (bucketConjured != null)
+            {
+                bucketConjured();
+            }
             toolsBought += 1;
             refreshToolsUI();
             rShardResourceCounter.AddToCounter(-toolNumberUpgradeCost);

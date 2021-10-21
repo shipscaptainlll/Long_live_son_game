@@ -8,7 +8,7 @@ public class FUPGrassTent : MonoBehaviour
     public Button upgradeButton;
     public int toolLevel;
     public int upgradeCost;
-    public bool isConstructed = false;
+    public bool isConstructed;
     public GameObject grassTentGO;
     public Text toolLvlCounterNow;
     public Text toolLvlCounterNext;
@@ -18,6 +18,7 @@ public class FUPGrassTent : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        isConstructed = true;
         upgradeButton.onClick.AddListener(upgradeElement);
         toolLevel = 1;
         upgradeCost = 500;

@@ -11,6 +11,7 @@ public class GoldResourceCounter : MonoBehaviour
     public Text countToText;
     public Text mineSpeedToText;
 
+    public event Action<float> goldEarned = delegate { };
     public string Type
     {
         get
@@ -30,6 +31,10 @@ public class GoldResourceCounter : MonoBehaviour
     {
         count += e;
         RefreshCounter(); 
+        if (goldEarned != null)
+        {
+            goldEarned(e);
+        }
     }
 
     public void AddToMineSpeedCounter(float e)

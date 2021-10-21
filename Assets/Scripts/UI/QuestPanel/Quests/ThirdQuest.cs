@@ -17,7 +17,7 @@ public class ThirdQuest : MonoBehaviour, IQuest
 
 
 
-    //First quest, main objective - to find ore
+    //Third quest, main objective - to learn pickaxe conjuration
     void Start()
     {
         //Initialize this quest id, according to List<> in quest manager

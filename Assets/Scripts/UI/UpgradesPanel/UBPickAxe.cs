@@ -31,8 +31,8 @@ public class UBPickAxe : MonoBehaviour
 
     public event Action<float, int> toolParametersRefreshed = delegate { };
     public event Action<int> newToolBought = delegate { };
-    //Create an event for third quest - learn pickaxe conjuration
-    public event Action pickAxeConjured = delegate { };
+    
+    public event Action pickAxeConjured = delegate { }; //Create an event for third quest - learn pickaxe conjuration
     // Start is called before the first frame update
     void Start()
     {

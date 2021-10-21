@@ -36,6 +36,8 @@ public class InteractionController : MonoBehaviour
 
     //Quests
     public event Action startedRockoreAutomining = delegate { }; //Send notification that started ore auto mining to fourth quest
+    public event Action startedWaterAutomining = delegate { }; //Send notification that started water auto mining to seventh quest
+    public event Action startedGrassAutomining = delegate { }; //Send notification that started grass auto mining to tenth quest
     // Start is called before the first frame update
     void Start()
     {
@@ -65,7 +67,7 @@ public class InteractionController : MonoBehaviour
             WellInteract(objectDetected);
         } else if (objectDetected.transform.parent.GetComponent<IResource>() != null && objectDetected.transform.parent.GetComponent<IResource>().Type == "Moss")
         {
-
+            Debug.Log(objectDetected);
             MossInteract(objectDetected);
         } else if (objectDetected.transform.parent.GetComponent<IResource>() != null && objectDetected.transform.parent.GetComponent<IResource>().Type == "Earth")
         {
@@ -156,6 +158,10 @@ public class InteractionController : MonoBehaviour
             bucket_well.GetComponent<Animator>().Play("AMining");
             well.transform.parent.parent.GetComponent<Well>().calculateMiningSpeed();
             contactedWell(1);
+            if (startedWaterAutomining != null)
+            {
+                startedWaterAutomining();
+            }
             //Debug.Log("Activated");
         }
 
@@ -186,6 +192,10 @@ public class InteractionController : MonoBehaviour
             scissors1_Moss.GetComponent<Animator>().Play("AMining1");
             moss.transform.parent.GetComponent<Moss>().calculateMiningSpeed();
             contactedMoss(1);
+            if (startedGrassAutomining != null)
+            {
+                startedGrassAutomining();
+            }
             //Debug.Log("Activated");
         }
 

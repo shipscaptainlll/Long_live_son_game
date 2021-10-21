@@ -23,7 +23,7 @@ public class FourthQuest : MonoBehaviour, IQuest
         //Initialize this quest id, according to List<> in quest manager
         questID = 3;
         //Initialize next quest id, according to List<> in quest manager
-        nextQuestID = -4;
+        nextQuestID = 4;
         //Initialize shards ammount reward for completing quest
         rewardAmmount = 15;
         //Subscribe for interaction controller, that will notify this script when character start rock ore auto mining

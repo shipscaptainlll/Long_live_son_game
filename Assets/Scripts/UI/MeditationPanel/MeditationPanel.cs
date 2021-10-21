@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,7 @@ public class MeditationPanel : MonoBehaviour
     public int costOfMeditation;
     public bool isMeditating = false;
 
+    public event Action startedMeditating = delegate { }; //Send notification that character started meditating to eleventh quest
     // Start is called before the first frame update
     void Start()
     {
@@ -25,6 +27,10 @@ public class MeditationPanel : MonoBehaviour
     {
         if (isMeditating == false && costOfMeditation < rShardResourceCounter.count)
         {
+            if (startedMeditating != null)
+            {
+                startedMeditating();
+            }
             isMeditating = true;
             decreaseMainCounter();
             quickAccessController.closeMeditationPanel();

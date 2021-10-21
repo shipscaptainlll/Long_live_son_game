@@ -32,7 +32,7 @@ public class SecondQuest : MonoBehaviour, IQuest
         //Initialize ammount of mined ore
         minedAmmount = 0;
         //Initialize goal ammount
-        objectiveAmmount = 100;
+        objectiveAmmount = 10;
         //Initialize this quest id, according to List<> in quest manager
         questID = 1;
         //Initialize next quest id, according to List<> in quest manager
@@ -53,7 +53,7 @@ public class SecondQuest : MonoBehaviour, IQuest
             float pct = minedAmmount / objectiveAmmount;
             refreshMinedAmmount();
             StartCoroutine(changeToPct(pct));
-        if (minedAmmount >= 100)
+        if (minedAmmount >= objectiveAmmount)
         { //Unsubscribe from rock main counter
             rockResourceCounter.rocksMined -= countMinedRocks;
             CompleteObjective();

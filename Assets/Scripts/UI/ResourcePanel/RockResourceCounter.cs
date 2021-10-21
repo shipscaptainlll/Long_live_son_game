@@ -14,6 +14,8 @@ public class RockResourceCounter : MonoBehaviour
     //Cargo panel
     public CargoResourceCounter cargoResourceCounter;
     public event Action<float> rocksMined;
+
+    public event Action rocksSold = delegate { }; //Send notification that character sold some stones to the twelfth quest
     public string Type
     {
         get
@@ -31,6 +33,10 @@ public class RockResourceCounter : MonoBehaviour
 
     public void AddToCounter(float e)
     {
+        if (rocksSold != null && e < 0)
+        {
+            rocksSold();
+        }
         count += e;
         RefreshCounter();
         if (rocksMined != null)

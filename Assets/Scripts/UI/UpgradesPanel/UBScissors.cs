@@ -31,6 +31,8 @@ public class UBScissors : MonoBehaviour
 
     public event Action<float, int> toolParametersRefreshed = delegate { };
     public event Action<int> newToolBought = delegate { };
+    public event Action scissorsConjured = delegate { }; //Create an event for ninth quest - learn scissors conjuration
+
     // Start is called before the first frame update
     void Start()
     {
@@ -131,6 +133,10 @@ public class UBScissors : MonoBehaviour
     {
         if (toolsBought < toolsBoughtMax && toolNumberUpgradeCost <= rShardResourceCounter.count)
         {
+            if (scissorsConjured != null)
+            {
+                scissorsConjured();
+            }
             toolsBought += 1;
             refreshToolsUI();
             rShardResourceCounter.AddToCounter(-toolNumberUpgradeCost);

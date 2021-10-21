@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,8 @@ public class FUPWellSlot : MonoBehaviour
     public Text toolLvlCounterNext;
     public Text toolUpgradeCost;
     public RockResourceCounter rockResourceCounter;
+
+    public event Action wellConstructer = delegate { };  //Send notification that well is constructed to fifth quest
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +42,10 @@ public class FUPWellSlot : MonoBehaviour
         toolLevel += 1;
         if (toolLevel > 0 && isConstructed == false)
         {
+            if (wellConstructer != null)
+            {
+                wellConstructer(); //Send notification that well is constructed to fifth quest
+            }
             isConstructed = true;
             wellGO.SetActive(true);
         }
