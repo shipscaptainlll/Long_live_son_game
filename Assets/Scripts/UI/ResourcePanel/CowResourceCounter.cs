@@ -6,12 +6,13 @@ using UnityEngine.UI;
 
 public class CowResourceCounter : MonoBehaviour
 {
-    public int count;
+    public CowMainResourceCounter cowMainResourceCounter; //Main cow resource controller, sending notification about new cow bought
+    public float count;
     private float mineSpeedCount;
     private Text countToText;
     private Text mineSpeedToText;
 
-
+    public event Action cowBought = delegate { }; //Send notification that character bought cow to thirteenth quest
     public string Type
     {
         get
@@ -22,13 +23,18 @@ public class CowResourceCounter : MonoBehaviour
 
     public void Start()
     {
+        cowMainResourceCounter.cowBought += AddToCounter;
         countToText = transform.Find("Counter").GetChild(0).GetComponent<Text>();
         mineSpeedToText = transform.Find("CounterPerMinute").Find("CounterText").GetComponent<Text>();
     }
     
 
-    public void AddToCounter(int e)
+    public void AddToCounter(float e)
     {
+        if (cowBought != null)
+        {
+            cowBought();
+        }
         count += e;
         RefreshCounter(); 
     }

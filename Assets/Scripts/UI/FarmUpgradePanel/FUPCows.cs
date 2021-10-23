@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,24 +7,29 @@ using UnityEngine.UI;
 public class FUPCows : MonoBehaviour
 {
     public Button upgradeButton;
-    public int toolLevel;
-    public int upgradeCost;
+    public CowFeedController cowFeedController1; //Connect first pasture feed controller
+    //public CowFeedController cowFeedController2;
+    //public CowFeedController cowFeedController3;
     public Text toolLvlCounterNow;
     public Text toolLvlCounterNext;
     public Text toolUpgradeCost;
-    public GoldResourceCounter mBagResourceCounter;
+    public CowMainResourceCounter cowMainResourceCounter;
+    public int toolLevel;
+    public int upgradeCost;
 
+    public event Action<CowFeedController> cowWasPlacedForController = delegate { }; //Event notifies main cows controller about new cow to feed etc.
+    public event Action cowWasPlacedAtFarm = delegate { }; //Event notifies fourteenth script about placing a cow at farm
     // Start is called before the first frame update
     void Start()
     {
         upgradeButton.onClick.AddListener(upgradeElement);
         toolLevel = 0;
-        upgradeCost = 500;
+        upgradeCost = 1;
     }
 
     void upgradeElement()
     {
-        if (upgradeCost <= mBagResourceCounter.count)
+        if (upgradeCost <= cowMainResourceCounter.count)
         {
             subtractCostFromMainCounter();
             addToCounter();
@@ -33,6 +39,14 @@ public class FUPCows : MonoBehaviour
 
     void addToCounter()
     {
+        if (cowWasPlacedForController != null)
+        {
+            cowWasPlacedForController(cowFeedController1);
+        }
+        if (cowWasPlacedAtFarm != null)
+        {
+            cowWasPlacedAtFarm();
+        }
         toolLevel += 1;
         refreshLvlCounter();
     }
@@ -44,7 +58,7 @@ public class FUPCows : MonoBehaviour
     }
     void addToUpgradeCost()
     {
-        upgradeCost *= 3;
+        upgradeCost *= 1;
         refreshUpgradeCostCounter();
     }
 
@@ -54,6 +68,6 @@ public class FUPCows : MonoBehaviour
     }
     void subtractCostFromMainCounter()
     {
-        mBagResourceCounter.AddToCounter(-upgradeCost);
+        cowMainResourceCounter.AddToCounter(-upgradeCost);
     }
 }

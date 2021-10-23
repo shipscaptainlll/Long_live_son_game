@@ -12,7 +12,7 @@ public class CargoBuyCowSlot : MonoBehaviour
     public int buyAmmountCount;
     public float costForUnit;
     public Slider chooseAmmountSlider;
-    public CowResourceCounter cowResourceCounter;
+    public CowMainResourceCounter cowResourceCounter;
     public GoldResourceCounter goldResourceCounter;
 
     // Start is called before the first frame update
