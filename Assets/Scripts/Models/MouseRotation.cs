@@ -32,7 +32,8 @@ public class MouseRotation : MonoBehaviour
     //Alchemy Mining
     public Animator alchemyEnter;
 
-    //typer of resources
+    //Meditation panel
+    public MeditationPanel MeditationPanel;
 
 
 
@@ -68,15 +69,18 @@ public class MouseRotation : MonoBehaviour
             
         }
         else {
-            float xRot = Input.GetAxis("Mouse X") * Time.deltaTime * mouseSensitivity;
-            float yRot = Input.GetAxis("Mouse Y") * Time.deltaTime * mouseSensitivity;
+            if (MeditationPanel.isMeditating != true)
+            {
+                float xRot = Input.GetAxis("Mouse X") * Time.deltaTime * mouseSensitivity;
+                float yRot = Input.GetAxis("Mouse Y") * Time.deltaTime * mouseSensitivity;
 
-            yRotation -= yRot * 2;
-            yRotation = Mathf.Clamp(yRotation, -90f, 50f);
+                yRotation -= yRot * 2;
+                yRotation = Mathf.Clamp(yRotation, -90f, 50f);
 
-            transform.localRotation = Quaternion.Euler(yRotation, 40.6216583f, 0f);
+                transform.localRotation = Quaternion.Euler(yRotation, 40.6216583f, 0f);
 
-            characterBody.Rotate(Vector3.up * xRot * 3);
+                characterBody.Rotate(Vector3.up * xRot * 3);
+            }
         }
 
         RaycastHit hit = new RaycastHit();
@@ -92,8 +96,8 @@ public class MouseRotation : MonoBehaviour
                 itemDetectedGO = hit.collider.gameObject;
                 itemDetectedDistance = hit.distance;
                 clickToInterractText.gameObject.SetActive(true);
-                Debug.Log(itemDetectedGO.transform.parent.GetComponent<IResource>());
-                Debug.Log(itemDetectedGO.transform.parent.GetComponent<IResource>().Type);
+                //Debug.Log(itemDetectedGO.transform.parent.GetComponent<IResource>());
+                //Debug.Log(itemDetectedGO.transform.parent.GetComponent<IResource>().Type);
                 //Detecting rock ore for the first quest
                 if (rockOreDetected != null && itemDetectedGO.GetComponent<IResource>() != null && itemDetectedGO.GetComponent<IResource>().Type == "Boulder")
                 {

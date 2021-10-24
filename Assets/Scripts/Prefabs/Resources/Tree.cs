@@ -6,8 +6,9 @@ using static IResource;
 
 public class Tree : MonoBehaviour, IResource
 {
-    public LogResourceCounter treeResourceCounter;
-    public RShardResourceCounter tshardResourceCounter;
+    public LogResourceCounter treeResourceCounter; //Logs resource main counter script
+    public RShardResourceCounter tshardResourceCounter; //Rock shards resource main counter script
+    public MeditationPanel MeditationPanel; //Script that will change mining speed when character meditating
     public int toolLevel;
     public bool isProcessedManually = false;
     public float miningSpeed = 0f;
@@ -54,6 +55,8 @@ public class Tree : MonoBehaviour, IResource
         calculateOreCost();
         transform.Find("HealthBarCanvas").GetComponent<HealthBar>().OreMined += collectMinedOre;
         axe = transform.Find("Axe").GetComponent<Axe>();
+        //Subscribe on meditation event, when event happens, mining speed will be changed correspondigly to state(meditation started/stopped)
+        MeditationPanel.startedMeditating += enterLeaveMeditationMode;
     }
 
     public void calculateOreCost()
@@ -69,6 +72,8 @@ public class Tree : MonoBehaviour, IResource
         miningShardSpeed = shardsInTree * (damagePerHit * miningAnimation.speed / objectMaxHealth);
         adjustMiningSpeedCounter();
     }
+
+    //Refreshes tool parameters (speed of mining animation, level of this tool) and then recalculates mining speed
     public void refreshToolParameters(float speed, int lvl)
     {
         miningAnimation.speed = speed;
@@ -78,6 +83,38 @@ public class Tree : MonoBehaviour, IResource
         {
             adjustMiningSpeedNegative();
             calculateMiningSpeed();
+        }
+    }
+
+    //During meditation time flows faster, it speeds up/ or descres the mining process using miningMultiplier parameter
+    public void enterLeaveMeditationMode(byte miningSpeedMultiplier, bool IsMeditatingStatus)
+    {
+        if (IsMeditatingStatus == true) //will be used when meditation started
+        {
+            Debug.Log("mining speed before multiplying: " + miningAnimation.speed);
+            miningAnimation.speed *= miningSpeedMultiplier;
+            Debug.Log("mining speed after multiplying: " + miningAnimation.speed);
+            //if ore was automatically mined when meditation started, we want to reset previous mine speed and set new one
+            if (isProcessed == true)
+            {
+                //Delete previous mining speed
+                adjustMiningSpeedNegative();
+                //Recalculate mining speed and set new one
+                calculateMiningSpeed();
+            }
+        }
+        else if (IsMeditatingStatus == false) //will be used when meditation stopped
+        {
+            miningAnimation.speed /= miningSpeedMultiplier;
+            Debug.Log("mining speed after meditation: " + miningAnimation.speed);
+            //if ore was automatically mined when meditation stopped, we want to reset previous mine speed and set new one
+            if (isProcessed == true)
+            {
+                //Delete previous mining speed
+                adjustMiningSpeedNegative();
+                //Recalculate mining speed and set new one
+                calculateMiningSpeed();
+            }
         }
     }
 

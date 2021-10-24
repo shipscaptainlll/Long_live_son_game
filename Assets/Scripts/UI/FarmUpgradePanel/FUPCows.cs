@@ -39,15 +39,16 @@ public class FUPCows : MonoBehaviour
 
     void addToCounter()
     {
-        if (cowWasPlacedForController != null)
-        {
-            cowWasPlacedForController(cowFeedController1);
-        }
+        
         if (cowWasPlacedAtFarm != null)
         {
             cowWasPlacedAtFarm();
         }
         toolLevel += 1;
+        if (toolLevel == 1 && cowWasPlacedForController != null)
+        {
+            cowWasPlacedForController(cowFeedController1);
+        }
         refreshLvlCounter();
     }
 

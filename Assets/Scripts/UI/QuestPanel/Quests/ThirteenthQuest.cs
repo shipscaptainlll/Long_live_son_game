@@ -44,6 +44,8 @@ public class ThirteenthQuest : MonoBehaviour, IQuest
         rewardAmmount = 25;
         //Subscribe for gold main counter, that will notify this script when character earn some gold coins
         goldResourceCounter.goldEarned += countEarnedGold;
+        minedAmmount = goldResourceCounter.count;
+        refreshMinedAmmount();
         //Give reward counter on panel the ammount you choose from script, more conveniet to do it from one place
         refreshUI();
     }

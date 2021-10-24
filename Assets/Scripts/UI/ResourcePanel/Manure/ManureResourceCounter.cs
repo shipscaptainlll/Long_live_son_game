@@ -6,16 +6,17 @@ using UnityEngine.UI;
 
 public class ManureResourceCounter : MonoBehaviour
 {
-    private int count;
+    public int count;
     private float mineSpeedCount;
     private Text countToText;
     private Text mineSpeedToText;
 
+    public event Action<float> ManureCollected = delegate { };
     public string Type
     {
         get
         {
-            return "Water";
+            return "Manure";
         }
     }
 
@@ -28,6 +29,10 @@ public class ManureResourceCounter : MonoBehaviour
 
     public void AddToCounter(int e)
     {
+        if (ManureCollected != null)
+        {
+            ManureCollected(e);
+        }
         count += e;
         RefreshCounter(); 
     }
@@ -45,6 +50,6 @@ public class ManureResourceCounter : MonoBehaviour
 
     void RefreshMineSpeedCounter()
     {
-        mineSpeedToText.text = mineSpeedCount.ToString();
+        mineSpeedToText.text = mineSpeedCount.ToString("0.00");
     }
 }

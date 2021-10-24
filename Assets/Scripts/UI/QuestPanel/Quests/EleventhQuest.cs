@@ -33,7 +33,7 @@ public class EleventhQuest : MonoBehaviour, IQuest
     }
 
     //Method that calls all methods, when you successfully complete quest
-    public void CompleteObjective()
+    public void CompleteObjective(byte notNesessary, bool alsoNotNesessary)
     {
         getReward();
         //Notify QuestPanel(subscriber), that this quest was successfully completed

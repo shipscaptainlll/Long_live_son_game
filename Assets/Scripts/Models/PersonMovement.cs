@@ -97,7 +97,6 @@ public class PersonMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         //HUD.SetActive(false);
         HUD.SetActive(true);
         mainCoinPurse.coinAmmount = 0;
@@ -224,7 +223,7 @@ public class PersonMovement : MonoBehaviour
             goldResourceCounter.AddToCounter(10000);
             waterResourceCounter.AddToCounter(10000);
             grassResourceCounter.AddToCounter(10000);
-            manureResourceCounter.AddToCounter(10000);
+            //manureResourceCounter.AddToCounter(10000);
             mBagResourceCounter.AddToCounter(10000);
             carrotResourceCounter.AddToCounter(10000);
             appleResourceCounter.AddToCounter(10000);
@@ -319,26 +318,30 @@ public class PersonMovement : MonoBehaviour
                 InventoryLockState.sprite = Unlocked;
             }
         }
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
 
-        Vector3 move = transform.right * x + transform.forward * z;
-        controller.Move(move * speed * Time.deltaTime);
-
-        isGrounded = Physics.CheckSphere(checkGround.position, checkRadius, checkLayer);
-
-        if (isGrounded && velocity.y < 0)
+        if (MeditationPanel.GetComponent<MeditationPanel>().isMeditating != true)
         {
-            velocity.y = -2f;
-        }
+            float x = Input.GetAxis("Horizontal");
+            float z = Input.GetAxis("Vertical");
 
-        if (isGrounded && Input.GetButtonDown("Jump"))
-        {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-        }
+            Vector3 move = transform.right * x + transform.forward * z;
+            controller.Move(move * speed * Time.deltaTime);
 
-        velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
+            isGrounded = Physics.CheckSphere(checkGround.position, checkRadius, checkLayer);
+
+            if (isGrounded && velocity.y < 0)
+            {
+                velocity.y = -2f;
+            }
+
+            if (isGrounded && Input.GetButtonDown("Jump"))
+            {
+                velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            }
+
+            velocity.y += gravity * Time.deltaTime;
+            controller.Move(velocity * Time.deltaTime);
+        }
     }
 
 

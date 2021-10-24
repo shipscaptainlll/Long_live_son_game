@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class GrassResourceCounter : MonoBehaviour
 {
     public int count;
-    private float mineSpeedCount;
+    public float mineSpeedCount;
     private Text countToText;
     private Text mineSpeedToText;
 

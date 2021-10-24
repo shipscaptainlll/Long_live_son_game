@@ -8,6 +8,8 @@ public class QuickAccessController : MonoBehaviour
     public bool QAPIsOpened;
     public GameObject quickAccessPanel;
     public GameObject currentlyOpened;
+    public GameObject CharacterBody; //Character body that will be spawned near spawn place when entering panel
+    public MouseRotation CharacterCamera; //Character body that will be rotated in right direction near spawn place when entering panel
 
     //Upgrades panel
     public GameObject upgradesPanel;
@@ -50,6 +52,7 @@ public class QuickAccessController : MonoBehaviour
     public GameObject meditationPanel;
     public Button meditationButton;
     public Button meditationCloseButton;
+    public Transform CharacterSpawnMeditation; //Place where character spawns when entering meditation panel;
 
     //Tree upgrade panel
     public GameObject treeUpgradePanel;
@@ -205,6 +208,12 @@ public class QuickAccessController : MonoBehaviour
     public void openMeditationPanel()
     {
         Debug.Log("openMeditationPanel");
+        // Teleporting character to the spawn place, associated with this panel
+        var offstet = CharacterSpawnMeditation.transform.position - CharacterBody.transform.position;
+        CharacterBody.GetComponent<CharacterController>().Move(offstet);
+        CharacterBody.transform.localRotation = Quaternion.Euler(0f, 90f, 0f);
+        CharacterCamera.yRotation = 40;
+        //Changing panels transparency
         currentlyOpened = meditationPanel;
         isPanelOpened = true;
         meditationPanel.transform.SetAsLastSibling();

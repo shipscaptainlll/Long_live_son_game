@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class WaterResourceCounter : MonoBehaviour
 {
-    private int count;
-    private float mineSpeedCount;
+    public int count;
+    public float mineSpeedCount;
     private Text countToText;
     private Text mineSpeedToText;
 
