@@ -27,7 +27,7 @@ public class QuestPanel : MonoBehaviour
         countOfActiveQuest = 0;
         questPanelPositionMultiplier = 250;
     //showing first quest
-    refreshCurrentQuest(-1, 12);
+    refreshCurrentQuest(-1, 14);
     }
 
     
@@ -56,9 +56,14 @@ public class QuestPanel : MonoBehaviour
         {
             yield return new WaitForSeconds(0.01f);
             listOfQuests[completedQuestID].GetComponent<CanvasGroup>().alpha -= 0.05f;
-            listOfQuests[completedQuestID].transform.localScale += new Vector3(0.1f,0.1f,0) ;
+            listOfQuests[completedQuestID].transform.localScale += new Vector3(0.1f, 0.1f, 0);
+            //Unsubscribe quest manager from this quest
+            //listOfQuests[completedQuestID].GetComponent<IQuest>().questCompleted -= refreshCurrentQuest;
         }
-        listOfQuests[completedQuestID].SetActive(false);
+        if (completedQuestID != 14)
+        {
+            listOfQuests[completedQuestID].SetActive(false);
+        }
     }
 
     //Method that starts showing next quest and moves it to the right position on the monitor

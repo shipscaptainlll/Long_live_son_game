@@ -9,7 +9,8 @@ public class BucketToolsPanel : MonoBehaviour
     public GameObject listOfToolsInUI;
     public List<GameObject> listOfTools;
     public UBBucket uBBucket;
-    public InteractionController interactionController;
+    [SerializeField]
+    private InteractionController interactionController;
     public Text toolsOriginsCounter;
     public int toolsLimit;
     public int toolsCount;
@@ -23,6 +24,7 @@ public class BucketToolsPanel : MonoBehaviour
         toolsLimit = uBBucket.toolsBoughtMax;
         uBBucket.newToolBought += newToolBought;
         interactionController.contactedWell += toolUsageControl;
+        interactionController.BucketContactedWithEarth += toolUsageControl;
         for (int i = 0; i < toolsLimit; i++)
         {
             listOfTools.Add(listOfToolsInUI.transform.GetChild(i).gameObject);
@@ -74,6 +76,20 @@ public class BucketToolsPanel : MonoBehaviour
             useTool();
             updateUsedToolsOnPanel();
         } else if (i == 0)
+        {
+            stopUsingTool();
+            updateUsedToolsOnPanel();
+        }
+    }
+
+    public void toolUsageControl(GameObject garbageData, string toActivateOrDeactivate)
+    {
+        if (toActivateOrDeactivate == "Activate")
+        {
+            useTool();
+            updateUsedToolsOnPanel();
+        }
+        else if (toActivateOrDeactivate == "Deactivate")
         {
             stopUsingTool();
             updateUsedToolsOnPanel();

@@ -12,6 +12,7 @@ public class ManureResourceCounter : MonoBehaviour
     private Text mineSpeedToText;
 
     public event Action<float> ManureCollected = delegate { };
+    public event Action ManureCollectedCounter = delegate { };
     public string Type
     {
         get
@@ -32,6 +33,10 @@ public class ManureResourceCounter : MonoBehaviour
         if (ManureCollected != null)
         {
             ManureCollected(e);
+        }
+        if (ManureCollectedCounter != null)
+        {
+            ManureCollectedCounter();
         }
         count += e;
         RefreshCounter(); 

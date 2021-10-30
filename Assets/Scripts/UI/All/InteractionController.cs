@@ -8,6 +8,8 @@ public class InteractionController : MonoBehaviour
     public MouseRotation camera;
     public GrassResourceCounter grassResourceCounter;
     public InputController inputController;
+    [SerializeField]
+    private QuickAccessController quickAccessController;
 
     //pickaxetoolpanel
     public PickAxeToolsPanel pickAxeToolsPanel;
@@ -15,15 +17,19 @@ public class InteractionController : MonoBehaviour
 
     //scissorstoolpanel
     public ScissorsToolsPanel scissorsToolsPanel;
-    public event Action<int> contactedMoss = delegate { };
+    public event Action<string> contactedMoss = delegate { };
+    public event Action<GameObject, string> ScissorsContactedWithEarth = delegate { };
 
     //buckettoolpanel
     public BucketToolsPanel bucketToolsPanel;
     public event Action<int> contactedWell = delegate { };
+    public event Action<GameObject, string> BucketContactedWithEarth = delegate { };
 
     //axetoolpanel
     public AxeToolsPanel axeToolsPanel;
     public event Action<int> contactedTree = delegate { };
+
+    
 
     //grass tent
     public FUPGrassTent fUPGrassTent;
@@ -33,6 +39,7 @@ public class InteractionController : MonoBehaviour
     public GameObject lastContactedObject;
     public GameObject axe;
     public GameObject pickAxe;
+    private bool isMiningSomething;
 
     //Quests
     public event Action startedRockoreAutomining = delegate { }; //Send notification that started ore auto mining to fourth quest
@@ -53,8 +60,7 @@ public class InteractionController : MonoBehaviour
     public void InteractWithObject()
     {
         GameObject objectDetected = camera.detectObject();
-        //Debug.Log(objectDetected);
-        //Debug.Log(objectDetected);
+
         if (objectDetected.GetComponent<IResource>() != null && objectDetected.GetComponent<IResource>().Type == "Boulder")
         {
             BoulderInteract(objectDetected);
@@ -63,7 +69,7 @@ public class InteractionController : MonoBehaviour
             TreeInteract(objectDetected);
         } else if (objectDetected.transform.parent.parent.GetComponent<IResource>() != null && objectDetected.transform.parent.parent.GetComponent<IResource>().Type == "Well")
         {
-            
+
             WellInteract(objectDetected);
         } else if (objectDetected.transform.parent.GetComponent<IResource>() != null && objectDetected.transform.parent.GetComponent<IResource>().Type == "Moss")
         {
@@ -71,8 +77,19 @@ public class InteractionController : MonoBehaviour
             MossInteract(objectDetected);
         } else if (objectDetected.transform.parent.GetComponent<IResource>() != null && objectDetected.transform.parent.GetComponent<IResource>().Type == "Earth")
         {
+            
+            if (CheckIfToolPanelOpened(scissorsToolsPanel.gameObject))
+            {
+                UseScissorsOnEarth(objectDetected);
+            } 
+            else if (CheckIfToolPanelOpened(bucketToolsPanel.gameObject))
+            {
+                UseBucketOnEarth(objectDetected);
+            } else if (CheckIfToolPanelOpened(bucketToolsPanel.gameObject))
+            {
+                EarthInteract(objectDetected);
+            }
 
-            EarthInteract(objectDetected);
         } else if (objectDetected.transform.parent.GetComponent<IResource>() != null && objectDetected.transform.parent.GetComponent<IResource>().Type == "FoodBowl")
         {
             FoodBowlInteract(objectDetected);
@@ -191,7 +208,7 @@ public class InteractionController : MonoBehaviour
             scissors_Moss.GetComponent<Animator>().Play("AMining");
             scissors1_Moss.GetComponent<Animator>().Play("AMining1");
             moss.transform.parent.GetComponent<Moss>().calculateMiningSpeed();
-            contactedMoss(1);
+            contactedMoss("Activate");
             if (startedGrassAutomining != null)
             {
                 startedGrassAutomining();
@@ -210,13 +227,14 @@ public class InteractionController : MonoBehaviour
             scissors_Moss.SetActive(false);
             scissors1_Moss.SetActive(false);
             moss.transform.parent.Find("HealthBarCanvas").gameObject.SetActive(false);
-            contactedMoss(0);
+            contactedMoss("Deactivate");
         }
     }
 
     private void EarthInteract(GameObject earth)
     {
-        if (earth.transform.parent.GetComponent<Earth>().isProcessed == false)
+        if (earth.transform.parent.GetComponent<Earth>().isProcessed == false && 
+            scissorsToolsPanel.gameObject.GetComponent<CanvasGroup>().alpha == 1 && scissorsToolsPanel.toolsUsed < scissorsToolsPanel.toolsCount)
         {
             earth.transform.parent.Find("HealthBarCanvas").gameObject.SetActive(true);
             earth.transform.parent.Find("HealthBarCanvas").gameObject.GetComponent<CanvasGroup>().alpha = 0f;
@@ -230,23 +248,24 @@ public class InteractionController : MonoBehaviour
             //scissors1_Moss.SetActive(true);
             earth.transform.parent.GetComponent<Earth>().isProcessed = true;
             //bucket_Water.GetComponent<Animator>().Play("Watering");
-            earth.transform.parent.GetComponent<Earth>().collectMinedOre();
+            //earth.transform.parent.GetComponent<Earth>().collectMinedOre();
             //bucket_Manure.GetComponent<Animator>().Play("Fertilizing");
             //scissors_Moss.GetComponent<Animator>().Play("AMining");
             //scissors1_Moss.GetComponent<Animator>().Play("AMining1");
-            earth.transform.parent.GetComponent<Earth>().calculateMiningSpeed();
+            //earth.transform.parent.GetComponent<Earth>().calculateMiningSpeed();
             //Debug.Log("Activated");
         }
 
-        else if (earth.transform.parent.GetComponent<Earth>().isProcessed == true)
+        else if (earth.transform.parent.GetComponent<Earth>().isProcessed == true &&
+            scissorsToolsPanel.gameObject.GetComponent<CanvasGroup>().alpha == 1)
         {
             GameObject bucket_Water = earth.transform.parent.Find("Bucket with water").gameObject;
             GameObject bucket_Manure = earth.transform.parent.Find("Bucket with manure").gameObject;
             GameObject scissors_Moss = earth.transform.parent.Find("Scissors").gameObject;
             GameObject scissors1_Moss = earth.transform.parent.Find("Scissors1").gameObject;
             earth.transform.parent.GetComponent<Earth>().isProcessed = false;
-            earth.transform.parent.GetComponent<Earth>().adjustMiningSpeedNegative();
-            bucket_Water.GetComponent<Animator>().Play("NewState");
+            //earth.transform.parent.GetComponent<Earth>().adjustMiningSpeedNegative();
+            //bucket_Water.GetComponent<Animator>().Play("NewState");
             bucket_Manure.GetComponent<Animator>().Play("NewState");
             scissors_Moss.GetComponent<Animator>().Play("NewState");
             scissors1_Moss.GetComponent<Animator>().Play("NewState");
@@ -255,6 +274,62 @@ public class InteractionController : MonoBehaviour
             scissors_Moss.SetActive(false);
             scissors1_Moss.SetActive(false);
             earth.transform.parent.Find("HealthBarCanvas").gameObject.SetActive(false);
+        }
+    }
+
+    //Sends a notification to earth pile 
+    private void UseScissorsOnEarth(GameObject earth)
+    {
+        if (!earth.transform.parent.GetComponent<Earth>().ScissorsActivated &&
+            CheckIfToolPanelOpened(scissorsToolsPanel.gameObject) && scissorsToolsPanel.toolsUsed < scissorsToolsPanel.toolsCount)
+        {
+            string toActivateOrDeactivate = "Activate";
+            NotifyScissorsToolCounter(earth, toActivateOrDeactivate);
+        }
+
+        else if (earth.transform.parent.GetComponent<Earth>().ScissorsActivated &&
+            CheckIfToolPanelOpened(scissorsToolsPanel.gameObject))
+        {
+            string toActivateOrDeactivate = "Deactivate";
+            NotifyScissorsToolCounter(earth, toActivateOrDeactivate);
+        }
+    }
+
+    private void NotifyScissorsToolCounter(GameObject earth, string toActivateOrDeactivate)
+    {
+        if (ScissorsContactedWithEarth != null)
+        {
+            ScissorsContactedWithEarth(earth, toActivateOrDeactivate);
+        }
+    }
+
+    private bool CheckIfToolPanelOpened(GameObject toolPanel)
+    {
+        return toolPanel.gameObject.GetComponent<CanvasGroup>().alpha == 1;
+    }
+
+    private void UseBucketOnEarth(GameObject earth)
+    {
+        if (!earth.transform.parent.GetComponent<Earth>().BucketActivated &&
+            CheckIfToolPanelOpened(bucketToolsPanel.gameObject) && bucketToolsPanel.toolsUsed < bucketToolsPanel.toolsCount)
+        {
+            string toActivateOrDeactivate = "Activate";
+            NotifyBucketToolCounter(earth, toActivateOrDeactivate);
+        }
+
+        else if (earth.transform.parent.GetComponent<Earth>().BucketActivated &&
+            CheckIfToolPanelOpened(bucketToolsPanel.gameObject))
+        {
+            string toActivateOrDeactivate = "Deactivate";
+            NotifyBucketToolCounter(earth, toActivateOrDeactivate);
+        }
+    }
+
+    private void NotifyBucketToolCounter(GameObject earth, string toActivateOrDeactivate)
+    {
+        if (BucketContactedWithEarth != null)
+        {
+            BucketContactedWithEarth(earth, toActivateOrDeactivate);
         }
     }
 
@@ -302,14 +377,30 @@ public class InteractionController : MonoBehaviour
         GameObject objectDetected = camera.detectObject();
         //Debug.Log(objectDetected);
         //Debug.Log(objectDetected);
-        if (objectDetected != null && objectDetected.GetComponent<IResource>() != null && objectDetected.GetComponent<IResource>().Type == "Boulder")
+        if (objectDetected != null
+            && objectDetected.GetComponent<IResource>() != null
+            && objectDetected.GetComponent<IResource>().Type == "Boulder")
         {
             BoulderInteractManually(objectDetected);
         }
-        else if (objectDetected != null && objectDetected.transform.parent.parent.GetComponent<IResource>() != null && objectDetected.transform.parent.parent.GetComponent<IResource>().Type == "Tree")
+        else if (objectDetected != null
+            && objectDetected.transform.parent.parent.GetComponent<IResource>() != null
+            && objectDetected.transform.parent.parent.GetComponent<IResource>().Type == "Tree")
         {
             TreeInteractManually(objectDetected);
-        } else { 
+        }
+        else if (objectDetected != null
+            && objectDetected.transform.parent.GetComponent<IResource>() != null
+            && objectDetected.transform.parent.GetComponent<IResource>().Type == "Earth"
+            && quickAccessController.currentlyOpened == null
+            && quickAccessController.QAPIsOpened == false
+            //&& quickAccessController.transform.gameObject.GetComponent<CanvasGroup>().alpha == 0
+            && quickAccessController.isPanelOpened == false
+            )
+        {
+            OpenSeedChoosePanelFor(objectDetected);
+        }
+        else { 
             //Debug.Log("Nothing found"); 
         }
         //Debug.Log(objectDetected);
@@ -323,10 +414,11 @@ public class InteractionController : MonoBehaviour
             boulder.transform.Find("HealthBarCanvas").gameObject.SetActive(true);
             boulder.GetComponent<Boulder>().isProcessedManually = true;
             characterAnimator.Play("Mining ore");
+        isMiningSomething = true;
             //Debug.Log("Hello");
             //boulder.GetComponent<Boulder>().calculateMiningSpeed();
             //Debug.Log("Activated");
-        
+
     }
 
     public void stopBoulderInteractManually()
@@ -337,6 +429,7 @@ public class InteractionController : MonoBehaviour
         if (lastContactedObject.GetComponent<Boulder>().timerStarted == false) { StartCoroutine(lastContactedObject.GetComponent<Boulder>().hideHealthBar()); }
         
         lastContactedObject = null;
+        isMiningSomething = false;
         pickAxe.SetActive(false);
     }
 
@@ -350,6 +443,7 @@ public class InteractionController : MonoBehaviour
             tree.transform.parent.parent.Find("HealthBarCanvas").gameObject.SetActive(true);
             tree.transform.parent.parent.GetComponent<Tree>().isProcessedManually = true;
             characterAnimator.Play("Chopping Tree");
+            isMiningSomething = true;
             //Debug.Log("Hello tree");
             //boulder.GetComponent<Boulder>().calculateMiningSpeed();
             //Debug.Log("Activated");
@@ -364,6 +458,17 @@ public class InteractionController : MonoBehaviour
         if (lastContactedObject.transform.parent.parent.GetComponent<Tree>().timerStarted == false) { StartCoroutine(lastContactedObject.transform.parent.parent.GetComponent<Tree>().hideHealthBar()); }
 
         lastContactedObject = null;
+        isMiningSomething = false;
         axe.SetActive(false);
+    }
+
+    public bool IsMiningSomething
+    {
+        get { return this.isMiningSomething; }
+    }
+
+    private void OpenSeedChoosePanelFor(GameObject detectedEarth)
+    {
+        quickAccessController.OpenSeedChoosePanelFor(detectedEarth);
     }
 }

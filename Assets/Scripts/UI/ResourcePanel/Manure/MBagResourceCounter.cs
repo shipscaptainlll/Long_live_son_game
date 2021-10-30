@@ -12,6 +12,7 @@ public class MBagResourceCounter : MonoBehaviour
     private Text mineSpeedToText;
     public CargoResourceCounter cargoResourceCounter;
 
+    public event Action<int> ManureBagsCountChanged = delegate { };
     public string Type
     {
         get
@@ -30,7 +31,11 @@ public class MBagResourceCounter : MonoBehaviour
     public void AddToCounter(int e)
     {
         count += e;
-        RefreshCounter(); 
+        RefreshCounter();
+        if ( ManureBagsCountChanged != null)
+        {
+            ManureBagsCountChanged(count);
+        }
     }
 
     public void AddToMineSpeedCounter(float e)

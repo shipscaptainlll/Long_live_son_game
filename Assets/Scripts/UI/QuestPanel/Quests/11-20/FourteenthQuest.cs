@@ -39,7 +39,7 @@ public class FourteenthQuest : MonoBehaviour, IQuest
         //Initialize this quest id, according to List<> in quest manager
         questID = 13;
         //Initialize next quest id, according to List<> in quest manager
-        nextQuestID = -14;
+        nextQuestID = 14;
         //Initialize shards ammount reward for completing quest
         rewardAmmount = 25;
         //Subscribe for manure main counter, that will notify this script when character collect some manure

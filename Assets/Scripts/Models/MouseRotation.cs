@@ -35,7 +35,8 @@ public class MouseRotation : MonoBehaviour
     //Meditation panel
     public MeditationPanel MeditationPanel;
 
-
+    //QuickAcessController
+    [SerializeField] private QuickAccessController QuickAccessController;
 
     //Images
     public Image InventoryLockState;
@@ -50,6 +51,7 @@ public class MouseRotation : MonoBehaviour
     public Animator anim;
 
     //Interract
+    [SerializeField] private InteractionController InteractionController;
     public Text clickToInterractText;
     public event Action rockOreDetected = delegate { }; //Send notification that character found rock ore to first quest
     public event Action mossDetected = delegate { }; //Send notification that character found moss to eighth quest
@@ -85,18 +87,26 @@ public class MouseRotation : MonoBehaviour
 
         RaycastHit hit = new RaycastHit();
         
-        if (Physics.SphereCast(transform.position, 1.0f, transform.TransformDirection(Vector3.forward * 3), out hit, 2f, currentObjectLayerMask))
+        if (Physics.SphereCast(transform.position, 1.0f, transform.TransformDirection(Vector3.forward * 3), out hit, 20f, currentObjectLayerMask))
         {
             GameObject Object = hit.transform.gameObject;
             double distanceFromObject = hit.distance;
-            
-            if (hit.collider != null )
+
+            if (hit.collider != null)
             {
-                
+
                 itemDetectedGO = hit.collider.gameObject;
                 itemDetectedDistance = hit.distance;
-                clickToInterractText.gameObject.SetActive(true);
-                //Debug.Log(itemDetectedGO.transform.parent.GetComponent<IResource>());
+                if (QuickAccessController.currentlyOpened == null
+                    && QuickAccessController.QAPIsOpened == false
+                    //&& QuickAccessController.GetComponent<CanvasGroup>().alpha == 0
+                    //&& QuickAccessController.isPanelOpened == false
+                    && !InteractionController.IsMiningSomething)
+                {
+                    clickToInterractText.gameObject.SetActive(true);
+                } else { clickToInterractText.gameObject.SetActive(false);}
+                
+                //Debug.Log(itemDetectedGO);
                 //Debug.Log(itemDetectedGO.transform.parent.GetComponent<IResource>().Type);
                 //Detecting rock ore for the first quest
                 if (rockOreDetected != null && itemDetectedGO.GetComponent<IResource>() != null && itemDetectedGO.GetComponent<IResource>().Type == "Boulder")

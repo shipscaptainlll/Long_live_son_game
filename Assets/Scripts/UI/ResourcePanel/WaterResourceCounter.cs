@@ -45,6 +45,6 @@ public class WaterResourceCounter : MonoBehaviour
 
     void RefreshMineSpeedCounter()
     {
-        mineSpeedToText.text = mineSpeedCount.ToString();
+        mineSpeedToText.text = mineSpeedCount.ToString("0.00");
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -59,6 +60,11 @@ public class QuickAccessController : MonoBehaviour
     public Button treeUpgradeButton;
     public Button treeUpgradeCloseButton;
 
+    //Seeds tools panel
+    [SerializeField]
+    private GameObject seedsToolsPanel;
+    public event Action<GameObject> ChooseSeedsPanelOpenedFor = delegate { };
+
     // Start is called before the first frame update
     void Start()
     {
@@ -81,128 +87,95 @@ public class QuickAccessController : MonoBehaviour
         treeUpgradeCloseButton.onClick.AddListener(closeTreeUpgradePanel);
         meditationButton.onClick.AddListener(openMeditationPanel);
         meditationCloseButton.onClick.AddListener(closeMeditationPanel);
+        seedsToolsPanel.GetComponent<SeedsToolsPanel>().ProductionTypeChosen += CloseSeedsToolPanel;
     }
 
-    public void openPanel()
+    public IEnumerator OpenPanel2()
     {
-        quickAccessPanel.GetComponent<CanvasGroup>().alpha = 1;
+        while (quickAccessPanel.GetComponent<CanvasGroup>().alpha < 1)
+        {
+            quickAccessPanel.GetComponent<CanvasGroup>().alpha += 0.18f;
+            yield return new WaitForSeconds(0.01f);
+        }
         quickAccessPanel.transform.SetAsLastSibling();
         QAPIsOpened = true;
     }
-
-    public void closePanel()
+    
+    public IEnumerator ClosePanel2()
     {
-        quickAccessPanel.GetComponent<CanvasGroup>().alpha = 0;
+        while (quickAccessPanel.GetComponent<CanvasGroup>().alpha > 0)
+        {
+            quickAccessPanel.GetComponent<CanvasGroup>().alpha -= 0.18f;
+            yield return new WaitForSeconds(0.01f);
+        }
         quickAccessPanel.transform.SetAsFirstSibling();
         QAPIsOpened = false;
     }
 
     public void openUpgradePanel()
     {
-        //Debug.Log("openUpgradePanel");
         currentlyOpened = upgradesPanel;
-        upgradesPanel.transform.SetAsLastSibling();
-        isPanelOpened = true;
-        upgradesPanel.GetComponent<CanvasGroup>().alpha = 1;
-        quickAccessPanel.GetComponent<CanvasGroup>().alpha = 0;
-        QAPIsOpened = false;
+        StartCoroutine(ShowSubPanel(currentlyOpened));
     }
     public void closeUpgradePanel()
     {
-        closeCurrentlyOpened();
+        StartCoroutine(closeCurrentlyOpened2());
     }
     public void openCargoPanel()
     {
-        //Debug.Log("openCargoPanel");
         currentlyOpened = cargoPanel;
-        cargoPanel.transform.SetAsLastSibling();
-        isPanelOpened = true;
-        cargoPanel.GetComponent<CanvasGroup>().alpha = 1;
-        quickAccessPanel.GetComponent<CanvasGroup>().alpha = 0;
-        QAPIsOpened = false;
+        StartCoroutine(ShowSubPanel(currentlyOpened));
     }
     public void closeCargoPanel()
     {
-        closeCurrentlyOpened();
+        StartCoroutine(closeCurrentlyOpened2());
     }
     public void openPickaxesPanel()
     {
-        Debug.Log("openPickaxesPanel");
         currentlyOpened = pickaxesPanel;
-        isToolOpened = true;
-        pickaxesPanel.transform.SetAsLastSibling();
-        pickaxesPanel.GetComponent<CanvasGroup>().alpha = 1;
-        quickAccessPanel.GetComponent<CanvasGroup>().alpha = 0;
-        QAPIsOpened = false;
+        StartCoroutine(ShowSubTool(currentlyOpened));
     }
     public void openScissorsesPanel()
     {
-        Debug.Log("openScissorsesPanel");
         currentlyOpened = scissorsesPanel;
-        isToolOpened = true;
-        scissorsesPanel.transform.SetAsLastSibling();
-        scissorsesPanel.GetComponent<CanvasGroup>().alpha = 1;
-        quickAccessPanel.GetComponent<CanvasGroup>().alpha = 0;
-        QAPIsOpened = false;
+        StartCoroutine(ShowSubTool(currentlyOpened));
     }
     public void openBucketsPanel()
     {
-        Debug.Log("openBucketsPanel");
-        currentlyOpened = bucketsPanel;
-        isToolOpened = true;
-        bucketsPanel.transform.SetAsLastSibling();
-        bucketsPanel.GetComponent<CanvasGroup>().alpha = 1;
-        quickAccessPanel.GetComponent<CanvasGroup>().alpha = 0;
-        QAPIsOpened = false;
+        currentlyOpened = bucketsPanel; 
+        StartCoroutine(ShowSubTool(currentlyOpened));
     }
     public void openAxesPanel() 
     {
-        //Debug.Log("openAxesPanel");
-        currentlyOpened = axesPanel;
-        isToolOpened = true;
-        axesPanel.transform.SetAsLastSibling();
-        axesPanel.GetComponent<CanvasGroup>().alpha = 1;
-        quickAccessPanel.GetComponent<CanvasGroup>().alpha = 0;
-        QAPIsOpened = false;
+        currentlyOpened = axesPanel; 
+        StartCoroutine(ShowSubTool(currentlyOpened));
     }
     public void openFarmUpgradePanel()
     {
-        Debug.Log("openFarmUpgradePanel");
         currentlyOpened = farmUpgradePanel;
-        isPanelOpened = true;
-        farmUpgradePanel.transform.SetAsLastSibling();
-        farmUpgradePanel.GetComponent<CanvasGroup>().alpha = 1;
-        quickAccessPanel.GetComponent<CanvasGroup>().alpha = 0;
-        QAPIsOpened = false;
+        StartCoroutine(ShowSubPanel(currentlyOpened));
     }
     public void closeFarmUpgradePanel()
     {
-        closeCurrentlyOpened();
+        StartCoroutine(closeCurrentlyOpened2());
     }
     public void openBlastBoulderPanel()
     {
-        Debug.Log("blastBoulderPanel");
         currentlyOpened = blastBoulderPanel;
-        isToolOpened = true;
-        blastBoulderPanel.transform.SetAsLastSibling();
-        blastBoulderPanel.GetComponent<CanvasGroup>().alpha = 1;
-        quickAccessPanel.GetComponent<CanvasGroup>().alpha = 0;
-        QAPIsOpened = false;
+        StartCoroutine(ShowSubTool(currentlyOpened));
     }
     
     public void openTreeUpgradePanel()
     {
-        Debug.Log("openTreeUpgradePanel");
         currentlyOpened = treeUpgradePanel;
-        isPanelOpened = true;
-        treeUpgradePanel.transform.SetAsLastSibling();
-        treeUpgradePanel.GetComponent<CanvasGroup>().alpha = 1;
-        quickAccessPanel.GetComponent<CanvasGroup>().alpha = 0;
-        QAPIsOpened = false;
+        StartCoroutine(ShowSubPanel(currentlyOpened));
     }
+
+    
+
     public void closeTreeUpgradePanel()
     {
-        closeCurrentlyOpened();
+        StartCoroutine(closeCurrentlyOpened2());
     }
 
     public void openMeditationPanel()
@@ -210,28 +183,90 @@ public class QuickAccessController : MonoBehaviour
         Debug.Log("openMeditationPanel");
         // Teleporting character to the spawn place, associated with this panel
         var offstet = CharacterSpawnMeditation.transform.position - CharacterBody.transform.position;
-        CharacterBody.GetComponent<CharacterController>().Move(offstet);
+        CharacterBody.GetComponent<CharacterController>().enabled = false;
+        CharacterBody.transform.position = CharacterSpawnMeditation.transform.position;
+        CharacterBody.GetComponent<CharacterController>().enabled = true;
         CharacterBody.transform.localRotation = Quaternion.Euler(0f, 90f, 0f);
         CharacterCamera.yRotation = 40;
         //Changing panels transparency
         currentlyOpened = meditationPanel;
-        isPanelOpened = true;
-        meditationPanel.transform.SetAsLastSibling();
-        meditationPanel.GetComponent<CanvasGroup>().alpha = 1;
-        quickAccessPanel.GetComponent<CanvasGroup>().alpha = 0;
-        QAPIsOpened = false;
+        StartCoroutine(ShowSubPanel(currentlyOpened));
     }
 
     public void closeMeditationPanel()
     {
-        closeCurrentlyOpened();
+        StartCoroutine(closeCurrentlyOpened2());
+    }
+
+    public void OpenSeedChoosePanelFor(GameObject detectedEarth)
+    {
+        currentlyOpened = seedsToolsPanel;
+        StartCoroutine(ShowSubPanel(currentlyOpened));
+        seedsToolsPanel.transform.parent.SetAsLastSibling();
+        NotifySeedsPanelAboutObject(detectedEarth);
     }
 
     
-    public void closeCurrentlyOpened()
+
+    private void NotifySeedsPanelAboutObject(GameObject detectedEarth)
     {
-        currentlyOpened.GetComponent<CanvasGroup>().alpha = 0;
+        if (ChooseSeedsPanelOpenedFor != null)
+        {
+            ChooseSeedsPanelOpenedFor(detectedEarth);
+            Debug.Log(detectedEarth);
+        }
+    }
+
+    private void CloseSeedsToolPanel(GameObject garbageDate, String garbageString)
+    {
+        StartCoroutine(closeCurrentlyOpened2());
+    }
+
+    public IEnumerator closeCurrentlyOpened2()
+    {
+        while (currentlyOpened.GetComponent<CanvasGroup>().alpha > 0)
+        {
+            currentlyOpened.GetComponent<CanvasGroup>().alpha -= 0.18f;
+            yield return new WaitForSeconds(0.01f);
+        }
         isToolOpened = false;
+        isPanelOpened = false;
         currentlyOpened = null;
+    }
+
+    public IEnumerator ShowSubPanel(GameObject subPanel)
+    {
+        while (quickAccessPanel.GetComponent<CanvasGroup>().alpha > 0)
+        {
+            quickAccessPanel.GetComponent<CanvasGroup>().alpha -= 0.12f;
+            yield return new WaitForSeconds(0.01f);
+        }
+        QAPIsOpened = false;
+
+        while (subPanel.GetComponent<CanvasGroup>().alpha < 1)
+        {
+            subPanel.GetComponent<CanvasGroup>().alpha += 0.12f;
+            yield return new WaitForSeconds(0.01f);
+        }
+        subPanel.transform.SetAsLastSibling();
+        isPanelOpened = true;
+    }
+
+    public IEnumerator ShowSubTool(GameObject subPanel)
+    {
+        while (quickAccessPanel.GetComponent<CanvasGroup>().alpha > 0)
+        {
+            quickAccessPanel.GetComponent<CanvasGroup>().alpha -= 0.12f;
+            yield return new WaitForSeconds(0.01f);
+        }
+        QAPIsOpened = false;
+
+        while (subPanel.GetComponent<CanvasGroup>().alpha < 1)
+        {
+            subPanel.GetComponent<CanvasGroup>().alpha += 0.12f;
+            yield return new WaitForSeconds(0.01f);
+        }
+        subPanel.transform.SetAsLastSibling();
+        isToolOpened = true;
     }
 }

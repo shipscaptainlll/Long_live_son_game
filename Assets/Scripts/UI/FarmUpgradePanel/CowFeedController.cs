@@ -29,7 +29,7 @@ public class CowFeedController : MonoBehaviour
         //Cow will eat that much per cycle
         GrassPerFeedingCycle = 100;
         //Cow will drink that much per cycle
-        WaterPerFeedingCycle = 100;
+        WaterPerFeedingCycle = 7;
         //Cow will poop that much per cycle
         ManurePerFeedingCycle = 1;
         AnimationProductionSpeed = 6;
@@ -54,15 +54,16 @@ public class CowFeedController : MonoBehaviour
     //Calculates speeds (per second) of giving and getting resources during feeding
     private void CalculateMiningSpeed()
     {
-        WaterSpendingSpeed = (WaterPerFeedingCycle * AnimationProductionSpeed) / TimerCycleLifetime;
-        GrassSpendingSpeed = (GrassPerFeedingCycle * AnimationProductionSpeed) / TimerCycleLifetime;
-        ManureProducingSpeed = (float) (ManurePerFeedingCycle * AnimationProductionSpeed) / TimerCycleLifetime;
+        WaterSpendingSpeed = (float) (WaterPerFeedingCycle * AnimationProductionSpeed) / 60;
+        GrassSpendingSpeed = (GrassPerFeedingCycle * AnimationProductionSpeed) / 60;
+        ManureProducingSpeed = (float) (ManurePerFeedingCycle * AnimationProductionSpeed) / 60;
     }
 
     //Starts process of eating by animation that works as a timer, also changes speeds of production in UI
     private void StartProductionTimer()
     {
         IsFeeded = true;
+        CalculateMiningSpeed();
         AddProductionSpeedsToUI();
         ManureProductionTimer.Play("PastureAnimation");
     }
@@ -115,7 +116,7 @@ public class CowFeedController : MonoBehaviour
                 RemoveProductionSpeedsFromUI();
                 CalculateMiningSpeed();
                 AddProductionSpeedsToUI();
-            }
+            } 
         }
     }
     

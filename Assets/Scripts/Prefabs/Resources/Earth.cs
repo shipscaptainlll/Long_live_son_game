@@ -10,20 +10,25 @@ public class Earth : MonoBehaviour, IResource
     public ASeedsResourceCounter aSeedsResourceCounter;
     public CarrotResourceCounter carrotResourceCounter;
     public CSeedsResourceCounter cSeedsResourceCounter;
+    [SerializeField] ManureResourceCounter ManureResourceCounter;
+    public InteractionController InteractionController; //Interaction controller that notifies earth tile script when scissors, bucket or seeds were used on it
+    public Animator miningAnimation;
+    public Bucket_earth_water bucket_Earth_Water;
+    public Bucket_earth_manure BucketEarthManure;
+    [SerializeField] GrowingCarrots GrowingCarrots;
+    [SerializeField] GrowingApples GrowingApples;
+    public Scissors_tree scissors_Tree;
     public float miningSpeed = 0f;
     public float neededResourcesSpeed = 0f;
     public float miningShardSpeed = 0f;
     public float neededResourcesSpeed2 = 0f;
-    public Animator miningAnimation;
-    public Bucket_earth_water bucket_Earth_Water;
-    public Bucket_earth_manure bucket_Earth_Manure;
-    public Scissors_tree scissors_Tree;
+    [SerializeField] SeedsToolsPanel SeedsToolsPanel;
     private float aminingSpeed;
     public int damagePerHit;
     public int objectMaxHealth;
-    public int applesInEarth;
+    public int applesPerCycle;
     public int aSeedsPerEarth;
-    public int carrotsInEarth;
+    public int carrotsPerCycle;
     public int cSeedsPerEarth;
 
     public float fertilizingOSpeed;
@@ -61,23 +66,263 @@ public class Earth : MonoBehaviour, IResource
     public float costShard;
     public float neededResources;
     public float neededResources2;
+    public bool HasCarrotSeeds;
+    public bool HasAppleSeeds;
+    public bool ScissorsActivated;
+    public bool BucketActivated;
+    private String TypeOfProduction;
+    private bool productionTypeIsChosen;
+    private bool readyToGrow;
 
+    private int appleSeedsPerCycle;
+    private int carrotSeedsPerCycle;
+    private int manurePerCycle;
+    bool adjustmentsAreReady;
+    bool suppliesAreReady;
+    bool growingInProgress;
+    string productionTypeInProgress;
+
+    private event Action AdjustmentsChanged = delegate { };
     void Start()
     {
+        InteractionController.ScissorsContactedWithEarth += ActivateOrDeactivateScissors;
+        InteractionController.BucketContactedWithEarth += ActivateOrDeactivateBucket;
+        HasCarrotSeeds = false;
+        HasAppleSeeds = false;
+        ScissorsActivated = false;
+        BucketActivated = false;
         isGatheringCarrots = false;
         isGatheringApples = true;
+        productionTypeIsChosen = false;
+        readyToGrow = false;
+        growingInProgress = false;
+        productionTypeInProgress = "default";
         objectMaxHealth = 100;
-        applesInEarth = 14;
-        carrotsInEarth = 9;
+        applesPerCycle = 14;
+        carrotsPerCycle = 9;
         aSeedsPerEarth = 10;
         cSeedsPerEarth = 10;
+        carrotSeedsPerCycle = 10;
+        appleSeedsPerCycle = 10;
+        manurePerCycle = 1;
         transform.GetComponent<Health>().currentHealth = objectMaxHealth;
         isProcessed = false;
-        calculateOreCost();
-        transform.Find("HealthBarCanvas").GetComponent<HealthBar>().OreMined += collectMinedOre;
-        bucket_Earth_Manure = transform.Find("Bucket with manure").GetComponent<Bucket_earth_manure>();
+        //calculateOreCost();
+        //transform.Find("HealthBarCanvas").GetComponent<HealthBar>().OreMined += collectMinedOre;
+        SeedsToolsPanel.ProductionTypeChosen += ManageProductionState;
+        AdjustmentsChanged += TryStartGrowing;
+        ManureResourceCounter.ManureCollectedCounter += TryStartGrowing;
+        cSeedsResourceCounter.cSeedsCollected += TryStartGrowing;
+        aSeedsResourceCounter.AppleSeedsCollected += TryStartGrowing;
+        BucketEarthManure = transform.Find("Bucket with manure").GetComponent<Bucket_earth_manure>();
+        BucketEarthManure.FinishedFertilizingEarth += WaterTree;
+        bucket_Earth_Water = transform.Find("Bucket with water").GetComponent<Bucket_earth_water>();
+        bucket_Earth_Water.FinishedWateringEarth += GrowPlant;
+        GrowingCarrots = transform.Find("Carrots").GetComponent<GrowingCarrots>();
+        GrowingCarrots.FinishedGrowingPlant += GatherPlant;
+        GrowingApples = transform.Find("Apples").GetComponent<GrowingApples>();
+        GrowingApples.FinishedGrowingPlant += GatherPlant;
+        scissors_Tree = transform.Find("Scissors").GetComponent<Scissors_tree>();
+        scissors_Tree.PlantHarvested += RestartGrowing;
+        
+
     }
 
+    //Activates scissors for this pile of earth
+    private void ActivateOrDeactivateScissors(GameObject earth, string toActivateOrDeactivate)
+    {
+        if (gameObject.transform.parent.gameObject == earth.transform.parent.parent.gameObject)
+        {
+            ScissorsActivated = toActivateOrDeactivate == "Activate" ? true : false;
+            NotifyAboutAdjustmentsChange();
+        }
+    }
+
+    private void ActivateOrDeactivateBucket(GameObject earth, string toActivateOrDeactivate)
+    {
+        if (gameObject.transform.parent.gameObject == earth.transform.parent.parent.gameObject)
+        {
+            BucketActivated = toActivateOrDeactivate == "Activate" ? true : false;
+            NotifyAboutAdjustmentsChange();
+        }
+    }
+
+    private void ManageProductionState(GameObject ChosenEarth, String TypeOfProduction)
+    {
+        if (gameObject.transform.parent.gameObject == ChosenEarth.transform.parent.parent.gameObject)
+        {
+            if (TypeOfProduction == "CarrotSeeds" || TypeOfProduction == "AppleSeeds")
+            {
+                productionTypeIsChosen = true;
+                this.TypeOfProduction = TypeOfProduction;
+                NotifyAboutAdjustmentsChange();
+            } else
+            {
+                productionTypeIsChosen = false;
+                this.TypeOfProduction = "StopProduction";
+                NotifyAboutAdjustmentsChange();
+            }
+        } else { }
+    }
+
+    private void NotifyAboutAdjustmentsChange()
+    {
+        if (AdjustmentsChanged != null)
+        {
+            AdjustmentsChanged();
+        }
+    }
+    
+    private void TryStartGrowing()
+    {
+        CheckAdjustmentsReadiness();
+        CheckSuppliesReadiness();
+        if (growingInProgress)
+        {
+            if (!adjustmentsAreReady || CheckIfProductionTypeChanged())
+            {
+                StopGrowingProcess();
+            }
+        }
+        if (adjustmentsAreReady && suppliesAreReady && !growingInProgress)
+        {
+            StartGrowingProcess();
+        }
+    }
+
+    private void StopGrowingProcess()
+    {
+        growingInProgress = false;
+        productionTypeInProgress = "default";
+        GameObject bucket_with_manure = gameObject.transform.Find("Bucket with manure").gameObject;
+        bucket_with_manure.SetActive(false);
+        bucket_with_manure.GetComponent<Animator>().Play("New State");
+        GameObject bucket_with_water = gameObject.transform.Find("Bucket with water").gameObject;
+        bucket_with_water.SetActive(false);
+        bucket_with_water.GetComponent<Animator>().Play("New State");
+        GameObject carrots = gameObject.transform.Find("Carrots").gameObject;
+        carrots.SetActive(false);
+        carrots.GetComponent<Animator>().Play("New State");
+        GameObject apples = gameObject.transform.Find("Apples").gameObject;
+        apples.SetActive(false);
+        apples.GetComponent<Animator>().Play("New State");
+        GameObject scissors = gameObject.transform.Find("Scissors").gameObject;
+        scissors.SetActive(false);
+        GameObject scissors1 = gameObject.transform.Find("Scissors1").gameObject;
+        scissors1.SetActive(false);
+        scissors.GetComponent<Animator>().Play("New State");
+        scissors1.GetComponent<Animator>().Play("New State");
+        Debug.Log("Growing has stopped");
+    }
+
+    private void StartGrowingProcess()
+    {
+        growingInProgress = true;
+        
+        productionTypeInProgress = TypeOfProduction;
+        fertilizeTree();
+        TakeResourcesForCycle();
+        Debug.Log("Growing has started, now growing " + productionTypeInProgress);
+    }
+
+    private void RestartGrowing()
+    {
+        AddPlantsToCargo();
+        StopGrowingProcess();
+        TryStartGrowing();
+    }
+
+    private void CheckAdjustmentsReadiness()
+    {
+        readyToGrow = BucketActivated && ScissorsActivated && productionTypeIsChosen;
+        adjustmentsAreReady = readyToGrow;
+    }
+
+    private bool CheckIfProductionTypeChanged()
+    {
+        return productionTypeInProgress != TypeOfProduction;
+    }
+
+    private void CheckSuppliesReadiness()
+    {
+        bool enoughManureForCycle = manurePerCycle <= ManureResourceCounter.count;
+        bool enoughSeedsForCycle = false;
+        if (TypeOfProduction == "CarrotSeeds")
+        {
+            enoughSeedsForCycle = carrotSeedsPerCycle <= cSeedsResourceCounter.count;
+        } else if (TypeOfProduction == "AppleSeeds")
+        {
+            enoughSeedsForCycle = appleSeedsPerCycle <= aSeedsResourceCounter.count;
+        }
+        suppliesAreReady = enoughManureForCycle && enoughSeedsForCycle;
+    }
+
+    private void fertilizeTree()
+    {
+        GameObject bucket_with_manure = gameObject.transform.Find("Bucket with manure").gameObject;
+        bucket_with_manure.SetActive(true);
+        bucket_with_manure.GetComponent<Animator>().Play("Fertilizing");
+    }
+
+    private void WaterTree()
+    {
+        GameObject bucket_with_water = gameObject.transform.Find("Bucket with water").gameObject;
+        bucket_with_water.SetActive(true);
+        bucket_with_water.GetComponent<Animator>().Play("Watering");
+    }
+
+    private void GrowPlant()
+    {
+        if (TypeOfProduction == "CarrotSeeds")
+        {
+            GameObject carrots = gameObject.transform.Find("Carrots").gameObject;
+            carrots.SetActive(true);
+            carrots.GetComponent<Animator>().Play("GrowingCarrots");
+            carrots.GetComponent<Animator>().speed = 0.1f;
+        }
+        if (TypeOfProduction == "AppleSeeds")
+        {
+            GameObject apples = gameObject.transform.Find("Apples").gameObject;
+            apples.SetActive(true);
+            apples.GetComponent<Animator>().Play("GrowingApples");
+            apples.GetComponent<Animator>().speed = 0.1f;
+        }
+    }
+
+    private void GatherPlant()
+    {
+        GameObject scissors = gameObject.transform.Find("Scissors").gameObject;
+        scissors.SetActive(true);
+        GameObject scissors1 = gameObject.transform.Find("Scissors1").gameObject;
+        scissors1.SetActive(true);
+        scissors.GetComponent<Animator>().Play("Harvesting");
+        scissors1.GetComponent<Animator>().Play("Harvesting1");
+    }
+
+    private void AddPlantsToCargo()
+    {
+        if (TypeOfProduction == "CarrotSeeds")
+        {
+            carrotResourceCounter.AddToCounter((int)carrotsPerCycle);
+        }
+        if (TypeOfProduction == "AppleSeeds")
+        {
+            appleResourceCounter.AddToCounter((int)applesPerCycle);
+        }
+    }
+
+    private void TakeResourcesForCycle()
+    {
+        if (TypeOfProduction == "CarrotSeeds")
+        {
+            cSeedsResourceCounter.AddToCounter((int)-carrotSeedsPerCycle);
+        }
+        if (TypeOfProduction == "AppleSeeds")
+        {
+            aSeedsResourceCounter.AddToCounter((int)-appleSeedsPerCycle);
+        }
+    }
+    /*
     public void calculateOreCost()
     {
         cost = applesInEarth;
@@ -117,122 +362,10 @@ public class Earth : MonoBehaviour, IResource
     
 
 
-    public void collectMinedOre()
-    {
-        StartCoroutine(useSeeds());
-        StartCoroutine(fertilizeTree());
-        
-        Debug.Log("Once again");
-    }
-    public void startWatering()
-    {
-        StartCoroutine(waterTree());
-    }
-    public void startGrowing()
-    {
-        StartCoroutine(growPlant());
-    }
-    public void startGathering()
-    {
-        StartCoroutine(gatherPlant());
-    }
-    public void startCollectingPlantToResources()
-    {
-        StartCoroutine(collectPlantToResources());
-    }
     
 
-    private IEnumerator fertilizeTree()
-    {
-        GameObject bucket_with_manure = gameObject.transform.Find("Bucket with manure").gameObject;
-        bucket_with_manure.SetActive(true);
-        bucket_with_manure.GetComponent<Animator>().Play("Fertilizing");
-
-        yield return null;
-
-    }
     
-    public IEnumerator waterTree()
-    {
-        GameObject bucket_with_water = gameObject.transform.Find("Bucket with water").gameObject;
-        bucket_with_water.SetActive(true);
-        bucket_with_water.GetComponent<Animator>().Play("Watering");
-        yield return null;
-
-    }
-
-    public IEnumerator growPlant()
-    {
-        
-        if (isGatheringCarrots == true)
-        {
-            yield return new WaitForSeconds(growingCOSpeed);
-            GameObject carrots = gameObject.transform.Find("Carrots").gameObject;
-            carrots.SetActive(true);
-        }
-        if (isGatheringApples == true)
-        {
-            yield return new WaitForSeconds(growingAOSpeed);
-            GameObject apples = gameObject.transform.Find("Apples").gameObject;
-            apples.SetActive(true);
-        }
-        startGathering();
-
-        //appleResourceCounter.AddToCounter((int)cost);
-        //aSeedsResourceCounter.AddToCounter((int)neededResources);
-        //carrotResourceCounter.AddToCounter((int)costShard);
-        //cSeedsResourceCounter.AddToCounter((int)neededResources2);
-    }
-    public IEnumerator gatherPlant()
-    {
-        yield return new WaitForSeconds(1.5f);
-        GameObject scissors = gameObject.transform.Find("Scissors").gameObject;
-        scissors.SetActive(true);
-        GameObject scissors1 = gameObject.transform.Find("Scissors1").gameObject;
-        scissors1.SetActive(true);
-        scissors.GetComponent<Animator>().Play("Harvesting");
-        scissors1.GetComponent<Animator>().Play("Harvesting1");
-        yield return null;
-
-        //appleResourceCounter.AddToCounter((int)cost);
-        //aSeedsResourceCounter.AddToCounter((int)neededResources);
-        //carrotResourceCounter.AddToCounter((int)costShard);
-        //cSeedsResourceCounter.AddToCounter((int)neededResources2);
-    }
-
-    public IEnumerator collectPlantToResources()
-    {
-        if (isGatheringCarrots == true)
-        {
-            carrotResourceCounter.AddToCounter((int)costShard);
-        }
-        if (isGatheringApples == true)
-        {
-            appleResourceCounter.AddToCounter((int)cost);
-        }
-        //appleResourceCounter.AddToCounter((int)cost);
-        //aSeedsResourceCounter.AddToCounter((int)neededResources);
-        
-        //cSeedsResourceCounter.AddToCounter((int)neededResources2);
-        yield return null;
-    }
-
-    public IEnumerator useSeeds()
-    {
-        if (isGatheringCarrots == true)
-        {
-            cSeedsResourceCounter.AddToCounter((int)-neededResources); 
-        }
-        if (isGatheringApples == true)
-        {
-            aSeedsResourceCounter.AddToCounter((int)-neededResources2);
-        }
-        //appleResourceCounter.AddToCounter((int)cost);
-        //aSeedsResourceCounter.AddToCounter((int)neededResources);
-
-        //cSeedsResourceCounter.AddToCounter((int)neededResources2);
-        yield return null;
-    }
+    
 
     public void adjustMiningSpeedCounter()
     {
@@ -278,5 +411,5 @@ public class Earth : MonoBehaviour, IResource
         
         //aSeedsResourceCounter.AddToMineSpeedCounter((float)negativeNeededResourcesSpeed);
         //cSeedsResourceCounter.AddToMineSpeedCounter((float)negativeneededResourcesSpeed2);
-    }
+    }*/
 }

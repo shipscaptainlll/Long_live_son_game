@@ -522,7 +522,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 4.516667
-    functionName: hittedObjectOnce
+    functionName: FinishedHarvestingPlant
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

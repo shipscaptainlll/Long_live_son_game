@@ -7,9 +7,12 @@ using UnityEngine.UI;
 public class FUPCows : MonoBehaviour
 {
     public Button upgradeButton;
+    public GameObject FirstPasture;
+    public GameObject SecondPasture;
+    public GameObject ThirdPasture;
     public CowFeedController cowFeedController1; //Connect first pasture feed controller
-    //public CowFeedController cowFeedController2;
-    //public CowFeedController cowFeedController3;
+    public CowFeedController cowFeedController2; //public CowFeedController cowFeedController2;
+    public CowFeedController cowFeedController3; //public CowFeedController cowFeedController3;
     public Text toolLvlCounterNow;
     public Text toolLvlCounterNext;
     public Text toolUpgradeCost;
@@ -47,7 +50,16 @@ public class FUPCows : MonoBehaviour
         toolLevel += 1;
         if (toolLevel == 1 && cowWasPlacedForController != null)
         {
+            FirstPasture.SetActive(true);
             cowWasPlacedForController(cowFeedController1);
+        } else if (toolLevel == 2 && cowWasPlacedForController != null)
+        {
+            SecondPasture.SetActive(true);
+            cowWasPlacedForController(cowFeedController2);
+        } else if (toolLevel == 3 && cowWasPlacedForController != null)
+        {
+            ThirdPasture.SetActive(true);
+            cowWasPlacedForController(cowFeedController3);
         }
         refreshLvlCounter();
     }

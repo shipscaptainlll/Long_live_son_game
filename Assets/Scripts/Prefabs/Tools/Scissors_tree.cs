@@ -1,34 +1,31 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Scissors_tree : MonoBehaviour
 {
-    public int damagePerHit;
-    // Start is called before the first frame update
-    
+    public event Action PlantHarvested = delegate { };
 
-    private void Awake()
+    void FinishedHarvestingPlant()
     {
-        damagePerHit = 10;
+        NotifyThatFininshedGrowing();
+        HideThisObject();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void NotifyThatFininshedGrowing()
     {
-        
+        if (PlantHarvested != null)
+        {
+            PlantHarvested();
+        }
     }
 
-    void hittedObjectOnce()
+    private void HideThisObject()
     {
-        transform.parent.Find("Scissors1").gameObject.SetActive(false);
-        if (transform.parent.GetComponent<Earth>().isGatheringCarrots == true) { transform.parent.Find("Carrots").gameObject.SetActive(false); }
-        if (transform.parent.GetComponent<Earth>().isGatheringApples == true) { transform.parent.Find("Apples").gameObject.SetActive(false); }
-        transform.parent.GetComponent<Earth>().startCollectingPlantToResources();
-        transform.parent.GetComponent<Earth>().collectMinedOre();
         transform.gameObject.SetActive(false);
-        
+        transform.parent.Find("Scissors1").gameObject.SetActive(false);
+        transform.parent.Find("Carrots").gameObject.SetActive(false);
+        transform.parent.Find("Apples").gameObject.SetActive(false);
     }
-
-    
 }

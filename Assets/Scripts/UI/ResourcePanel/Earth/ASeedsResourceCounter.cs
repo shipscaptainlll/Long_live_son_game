@@ -12,6 +12,7 @@ public class ASeedsResourceCounter : MonoBehaviour
     public Text mineSpeedToText;
     public CargoResourceCounter cargoResourceCounter;
 
+    public event Action AppleSeedsCollected = delegate { };
     public string Type
     {
         get
@@ -31,7 +32,16 @@ public class ASeedsResourceCounter : MonoBehaviour
     public void AddToCounter(float e)
     {
         count += e;
+        NotifyThatResourceCollected();
         RefreshCounter(); 
+    }
+
+    private void NotifyThatResourceCollected()
+    {
+        if (AppleSeedsCollected != null)
+        {
+            AppleSeedsCollected();
+        }
     }
 
     public void AddToMineSpeedCounter(float e)

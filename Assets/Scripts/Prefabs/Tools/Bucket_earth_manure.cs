@@ -1,29 +1,28 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Bucket_earth_manure : MonoBehaviour
 {
-    public int damagePerHit;
-    // Start is called before the first frame update
+    public event Action FinishedFertilizingEarth = delegate { };
     
-
-    private void Awake()
+    void finishedFertilizing()
     {
-        damagePerHit = 100;
+        NotifyThatFininshedFertilizing();
+        HideThisObject();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void NotifyThatFininshedFertilizing()
     {
-        
+        if (FinishedFertilizingEarth != null)
+        {
+            FinishedFertilizingEarth();
+        }
     }
 
-    void hittedObjectOnce()
+    private void HideThisObject()
     {
-        transform.parent.GetComponent<Earth>().startWatering();
         transform.gameObject.SetActive(false);
     }
-
-    
 }

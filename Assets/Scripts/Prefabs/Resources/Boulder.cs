@@ -94,9 +94,9 @@ public class Boulder : MonoBehaviour, IResource
     {
         if (IsMeditatingStatus == true) //will be used when meditation started
         {
-            Debug.Log("mining speed before multiplying: " + miningAnimation.speed);
+            //Debug.Log("mining speed before multiplying: " + miningAnimation.speed);
             miningAnimation.speed *= miningSpeedMultiplier;
-            Debug.Log("mining speed after multiplying: " + miningAnimation.speed);
+            //Debug.Log("mining speed after multiplying: " + miningAnimation.speed);
             //if ore was automatically mined when meditation started, we want to reset previous mine speed and set new one
             if (isProcessed == true)
             {
@@ -108,7 +108,7 @@ public class Boulder : MonoBehaviour, IResource
         } else if (IsMeditatingStatus == false) //will be used when meditation stopped
         {
             miningAnimation.speed /= miningSpeedMultiplier;
-            Debug.Log("mining speed after meditation: " + miningAnimation.speed);
+            //Debug.Log("mining speed after meditation: " + miningAnimation.speed);
             //if ore was automatically mined when meditation stopped, we want to reset previous mine speed and set new one
             if (isProcessed == true)
             {

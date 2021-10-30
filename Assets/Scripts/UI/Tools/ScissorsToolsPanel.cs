@@ -23,6 +23,7 @@ public class ScissorsToolsPanel : MonoBehaviour
         toolsLimit = uBScissors.toolsBoughtMax;
         uBScissors.newToolBought += newToolBought;
         interactionController.contactedMoss += toolUsageControl;
+        interactionController.ScissorsContactedWithEarth += toolUsageControl;
         for (int i = 0; i < toolsLimit; i++)
         {
             listOfTools.Add(listOfToolsInUI.transform.GetChild(i).gameObject);
@@ -67,13 +68,27 @@ public class ScissorsToolsPanel : MonoBehaviour
         toolsOriginsCounter.text = toolsCount.ToString();
     }
 
-    public void toolUsageControl(int i)
+    public void toolUsageControl(string toActivateOrDeactivate)
     {
-        if (i == 1)
+        if (toActivateOrDeactivate == "Activate")
         {
             useTool();
             updateUsedToolsOnPanel();
-        } else if (i == 0)
+        } else if (toActivateOrDeactivate == "Deactivate")
+        {
+            stopUsingTool();
+            updateUsedToolsOnPanel();
+        }
+    }
+
+    public void toolUsageControl(GameObject garbageData, string toActivateOrDeactivate)
+    {
+        if (toActivateOrDeactivate == "Activate")
+        {
+            useTool();
+            updateUsedToolsOnPanel();
+        }
+        else if (toActivateOrDeactivate == "Deactivate")
         {
             stopUsingTool();
             updateUsedToolsOnPanel();

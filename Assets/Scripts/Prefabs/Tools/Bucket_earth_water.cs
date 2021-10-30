@@ -1,30 +1,28 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Bucket_earth_water : MonoBehaviour
 {
-    public int damagePerHit;
-    // Start is called before the first frame update
-    
+    public event Action FinishedWateringEarth = delegate { };
 
-    private void Awake()
+    void finishedWatering()
     {
-        damagePerHit = 1;
+        NotifyThatFininshedWatering();
+        HideThisObject();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void NotifyThatFininshedWatering()
     {
-        
+        if (FinishedWateringEarth != null)
+        {
+            FinishedWateringEarth();
+        }
     }
 
-    void hittedObjectOnce()
+    private void HideThisObject()
     {
-        transform.parent.GetComponent<Earth>().collectPlantToResources();
-        transform.parent.GetComponent<Earth>().startGrowing();
         transform.gameObject.SetActive(false);
     }
-
-    
 }

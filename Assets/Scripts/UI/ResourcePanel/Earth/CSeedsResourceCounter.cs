@@ -12,6 +12,8 @@ public class CSeedsResourceCounter : MonoBehaviour
     public Text mineSpeedToText;
     public CargoResourceCounter cargoResourceCounter;
 
+    //Event that notifies eighteenth quests that some carrot seeds gathered
+    public event Action cSeedsCollected = delegate { };
     public string Type
     {
         get
@@ -29,6 +31,10 @@ public class CSeedsResourceCounter : MonoBehaviour
 
     public void AddToCounter(float e)
     {
+        if (cSeedsCollected != null)
+        {
+            cSeedsCollected();
+        }
         count += e;
         RefreshCounter(); 
     }

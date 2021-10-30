@@ -26,6 +26,8 @@ public class PersonMovement : MonoBehaviour
     public GameObject MeditationPanel;
     public GameObject TreeUpgradePanel;
     public GameObject FarmUpgradePanel;
+    [SerializeField] 
+    private GameObject SeedsToolsPanel;
 
     public CoinPurse mainCoinPurse;
     public Text coinCounterInventory;
@@ -146,19 +148,22 @@ public class PersonMovement : MonoBehaviour
 
             if (quickAccessController.currentlyOpened == null && quickAccessController.QAPIsOpened == false)
             {
-                quickAccessController.openPanel();
+                StartCoroutine(quickAccessController.OpenPanel2());
             } else if (quickAccessController.isToolOpened == true && quickAccessController.QAPIsOpened == false)
             {
-                quickAccessController.closeCurrentlyOpened();
-                quickAccessController.openPanel();
+                StartCoroutine(quickAccessController.closeCurrentlyOpened2());
+                //quickAccessController.closeCurrentlyOpened();
+                StartCoroutine(quickAccessController.OpenPanel2());
             }
             else if (quickAccessController.isPanelOpened == true && quickAccessController.QAPIsOpened == false)
             {
-                quickAccessController.closeCurrentlyOpened();
+                StartCoroutine(quickAccessController.closeCurrentlyOpened2());
+                //quickAccessController.closeCurrentlyOpened();
             }
             else if (quickAccessController.currentlyOpened == null && quickAccessController.QAPIsOpened == true)
             {
-                quickAccessController.closePanel();
+                StartCoroutine(quickAccessController.ClosePanel2());
+                //quickAccessController.closePanel();
             }
 
         }
@@ -167,10 +172,12 @@ public class PersonMovement : MonoBehaviour
         {
             if (quickAccessController.currentlyOpened != null && quickAccessController.QAPIsOpened == false)
             {
-                quickAccessController.closeCurrentlyOpened();
+                StartCoroutine(quickAccessController.closeCurrentlyOpened2());
+                //quickAccessController.closeCurrentlyOpened();
             } else if (quickAccessController.currentlyOpened == null && quickAccessController.QAPIsOpened == true)
             {
-                quickAccessController.closePanel();
+                StartCoroutine(quickAccessController.ClosePanel2());
+                //quickAccessController.closePanel();
             }
         }
         if (Input.GetKeyDown(KeyCode.Z))
@@ -179,8 +186,15 @@ public class PersonMovement : MonoBehaviour
             forceField.GetComponent<ForceField>().openSphere();
         }
         
-        if (HUD.GetComponent<CanvasGroup>().alpha == 1 || shopInventoryInterface.activeInHierarchy || UpgradePanel.GetComponent<CanvasGroup>().alpha == 1 || QuickAccessPanel.GetComponent<CanvasGroup>().alpha == 1 ||
-            CargoPanel.GetComponent<CanvasGroup>().alpha == 1 || MeditationPanel.GetComponent<CanvasGroup>().alpha == 1 || TreeUpgradePanel.GetComponent<CanvasGroup>().alpha == 1 || FarmUpgradePanel.GetComponent<CanvasGroup>().alpha == 1 )
+        if (HUD.GetComponent<CanvasGroup>().alpha == 1 
+            || shopInventoryInterface.activeInHierarchy 
+            || UpgradePanel.GetComponent<CanvasGroup>().alpha == 1 
+            || QuickAccessPanel.GetComponent<CanvasGroup>().alpha == 1 
+            || CargoPanel.GetComponent<CanvasGroup>().alpha == 1 
+            || MeditationPanel.GetComponent<CanvasGroup>().alpha == 1 
+            || TreeUpgradePanel.GetComponent<CanvasGroup>().alpha == 1 
+            || FarmUpgradePanel.GetComponent<CanvasGroup>().alpha == 1
+            || SeedsToolsPanel.GetComponent<CanvasGroup>().alpha == 1)
         {
             Cursor.lockState = CursorLockMode.Confined;
         } else { Cursor.lockState = CursorLockMode.Locked;
@@ -223,7 +237,7 @@ public class PersonMovement : MonoBehaviour
             goldResourceCounter.AddToCounter(10000);
             waterResourceCounter.AddToCounter(10000);
             grassResourceCounter.AddToCounter(10000);
-            //manureResourceCounter.AddToCounter(10000);
+            manureResourceCounter.AddToCounter(10000);
             mBagResourceCounter.AddToCounter(10000);
             carrotResourceCounter.AddToCounter(10000);
             appleResourceCounter.AddToCounter(10000);

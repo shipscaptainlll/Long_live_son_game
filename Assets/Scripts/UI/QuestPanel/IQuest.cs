@@ -6,7 +6,6 @@ using UnityEngine;
 public interface IQuest
 {
     event Action<int, int> questCompleted;
-
     void getReward();
 }
 

@@ -20,7 +20,8 @@ public class CargoBuyCowSlot : MonoBehaviour
     {
         buyButton.onClick.AddListener(buyFor);
         chooseAmmountSlider.onValueChanged.AddListener(delegate { calculateCost(); });
-        costForUnit = 5000;
+        costForUnit = 500;
+        refreshCounters();
     }
 
     void buyFor()
