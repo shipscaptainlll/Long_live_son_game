@@ -29,8 +29,6 @@ public class InteractionController : MonoBehaviour
     public AxeToolsPanel axeToolsPanel;
     public event Action<int> contactedTree = delegate { };
 
-    
-
     //grass tent
     public FUPGrassTent fUPGrassTent;
 
@@ -44,7 +42,13 @@ public class InteractionController : MonoBehaviour
     //Quests
     public event Action startedRockoreAutomining = delegate { }; //Send notification that started ore auto mining to fourth quest
     public event Action startedWaterAutomining = delegate { }; //Send notification that started water auto mining to seventh quest
-    public event Action startedGrassAutomining = delegate { }; //Send notification that started grass auto mining to tenth quest
+    public event Action startedGrassAutomining = delegate { };
+    public event Action SeedsAdded = delegate { };
+    public event Action BucketAdded = delegate { };
+    public event Action ScissorsAdded = delegate { };
+
+    //Boulder blast
+    [SerializeField] GameObject BoulderBlastPanel;
     // Start is called before the first frame update
     void Start()
     {
@@ -285,6 +289,7 @@ public class InteractionController : MonoBehaviour
         {
             string toActivateOrDeactivate = "Activate";
             NotifyScissorsToolCounter(earth, toActivateOrDeactivate);
+            NotifyEighteenthQuestScissorsAdded();
         }
 
         else if (earth.transform.parent.GetComponent<Earth>().ScissorsActivated &&
@@ -308,6 +313,14 @@ public class InteractionController : MonoBehaviour
         return toolPanel.gameObject.GetComponent<CanvasGroup>().alpha == 1;
     }
 
+    void NotifyEighteenthQuestScissorsAdded()
+    {
+        if (ScissorsAdded != null)
+        {
+            ScissorsAdded();
+        }
+    }
+
     private void UseBucketOnEarth(GameObject earth)
     {
         if (!earth.transform.parent.GetComponent<Earth>().BucketActivated &&
@@ -315,6 +328,7 @@ public class InteractionController : MonoBehaviour
         {
             string toActivateOrDeactivate = "Activate";
             NotifyBucketToolCounter(earth, toActivateOrDeactivate);
+            NotifyEighteenthQuestBucketAdded();
         }
 
         else if (earth.transform.parent.GetComponent<Earth>().BucketActivated &&
@@ -330,6 +344,14 @@ public class InteractionController : MonoBehaviour
         if (BucketContactedWithEarth != null)
         {
             BucketContactedWithEarth(earth, toActivateOrDeactivate);
+        }
+    }
+
+    void NotifyEighteenthQuestBucketAdded()
+    {
+        if (BucketAdded != null)
+        {
+            BucketAdded();
         }
     }
 
@@ -399,11 +421,11 @@ public class InteractionController : MonoBehaviour
             )
         {
             OpenSeedChoosePanelFor(objectDetected);
+        } else if (objectDetected != null
+            && objectDetected.name == "WallDestroyable")
+        {
+            WallDestroy(objectDetected);
         }
-        else { 
-            //Debug.Log("Nothing found"); 
-        }
-        //Debug.Log(objectDetected);
     }
 
     public void BoulderInteractManually(GameObject boulder)
@@ -470,5 +492,15 @@ public class InteractionController : MonoBehaviour
     private void OpenSeedChoosePanelFor(GameObject detectedEarth)
     {
         quickAccessController.OpenSeedChoosePanelFor(detectedEarth);
+    }
+
+    void WallDestroy(GameObject objectDetected)
+    {
+        if (CheckIfToolPanelOpened(BoulderBlastPanel.gameObject))
+        {
+            objectDetected.transform.parent.gameObject.SetActive(false);
+            Debug.Log("Wall is destroyed");
+        }
+        
     }
 }

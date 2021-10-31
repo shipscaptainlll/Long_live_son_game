@@ -53,9 +53,9 @@ public class MouseRotation : MonoBehaviour
     //Interract
     [SerializeField] private InteractionController InteractionController;
     public Text clickToInterractText;
-    public event Action rockOreDetected = delegate { }; //Send notification that character found rock ore to first quest
-    public event Action mossDetected = delegate { }; //Send notification that character found moss to eighth quest
-
+    public event Action rockOreDetected = delegate { }; 
+    public event Action mossDetected = delegate { };
+    public event Action TreeDetected = delegate { };
     // Start is called before the first frame update
     void Start()
     {
@@ -87,37 +87,38 @@ public class MouseRotation : MonoBehaviour
 
         RaycastHit hit = new RaycastHit();
         
-        if (Physics.SphereCast(transform.position, 1.0f, transform.TransformDirection(Vector3.forward * 3), out hit, 20f, currentObjectLayerMask))
+        if (Physics.SphereCast(transform.position, 1.0f, transform.TransformDirection(Vector3.forward * 3), out hit, 200f, currentObjectLayerMask))
         {
             GameObject Object = hit.transform.gameObject;
             double distanceFromObject = hit.distance;
-
+            
             if (hit.collider != null)
             {
 
                 itemDetectedGO = hit.collider.gameObject;
                 itemDetectedDistance = hit.distance;
-                if (QuickAccessController.currentlyOpened == null
+                Debug.Log(itemDetectedGO + " " + hit.distance);
+                if (hit.distance <= 5f 
+                    && QuickAccessController.currentlyOpened == null
                     && QuickAccessController.QAPIsOpened == false
-                    //&& QuickAccessController.GetComponent<CanvasGroup>().alpha == 0
-                    //&& QuickAccessController.isPanelOpened == false
                     && !InteractionController.IsMiningSomething)
                 {
                     clickToInterractText.gameObject.SetActive(true);
                 } else { clickToInterractText.gameObject.SetActive(false);}
                 
-                //Debug.Log(itemDetectedGO);
-                //Debug.Log(itemDetectedGO.transform.parent.GetComponent<IResource>().Type);
-                //Detecting rock ore for the first quest
-                if (rockOreDetected != null && itemDetectedGO.GetComponent<IResource>() != null && itemDetectedGO.GetComponent<IResource>().Type == "Boulder")
+                if (hit.distance <= 5f && rockOreDetected != null && itemDetectedGO.GetComponent<IResource>() != null && itemDetectedGO.GetComponent<IResource>().Type == "Boulder")
                 {
-                    rockOreDetected(); //Send notification that character found rock ore to first quest
-                } else if (mossDetected != null && itemDetectedGO.transform.parent.GetComponent<IResource>() != null && itemDetectedGO.transform.parent.GetComponent<IResource>().Type == "Moss")
+                    rockOreDetected(); 
+                } else if (hit.distance <= 5f && mossDetected != null && itemDetectedGO.transform.parent.GetComponent<IResource>() != null && itemDetectedGO.transform.parent.GetComponent<IResource>().Type == "Moss")
                 {
-                    //Debug.Log("Something");
-                    mossDetected(); //Send notification that character found moss to eighth quest
-                } else { }
-                
+                    mossDetected(); 
+                }
+                else if (hit.distance <= 25f && TreeDetected != null && itemDetectedGO.transform.parent.parent.GetComponent<IResource>() != null && itemDetectedGO.transform.parent.parent.GetComponent<IResource>().Type == "Tree")
+                {
+                    TreeDetected();
+                }
+                else { }
+
                 /*
                 if (itemDetected.Type == "Ore" && hit.distance < 2.2 && characterAnimator.beingBusy == false && characterAnimator.IS_MINED == 1)
                 {
@@ -208,17 +209,23 @@ public class MouseRotation : MonoBehaviour
         
         RaycastHit hit = new RaycastHit();
 
-        if (Physics.SphereCast(transform.position, 1.0f, transform.TransformDirection(Vector3.forward * 3), out hit, maxDistance, currentObjectLayerMask))
+        if (Physics.SphereCast(transform.position, 1.0f, transform.TransformDirection(Vector3.forward * 3), out hit, 200, currentObjectLayerMask))
         {
             GameObject Object = hit.transform.gameObject;
             double distanceFromObject = hit.distance;
-            
+
             if (hit.collider != null)
             {
                 itemDetected = hit.collider.GetComponent<IInventoryItem>();
                 itemDetectedGO = hit.collider.gameObject;
                 itemDetectedDistance = hit.distance;
-                return itemDetectedGO;
+                if (hit.distance <= 3)
+                {
+                    return itemDetectedGO;
+                } else if(itemDetectedGO.name == "WallDestroyable") {
+                    return itemDetectedGO;
+                } else { return null; }
+                
                 /*
                 if (itemDetected.Type == "Ore" && hit.distance < 2.2 && characterAnimator.beingBusy == false && characterAnimator.IS_MINED == 1)
                 {

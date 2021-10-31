@@ -11,6 +11,7 @@ public class AppleResourceCounter : MonoBehaviour
     private Text countToText;
     private Text mineSpeedToText;
 
+    public event Action ApplesCollected = delegate { };
     public string Type
     {
         get
@@ -28,8 +29,17 @@ public class AppleResourceCounter : MonoBehaviour
 
     public void AddToCounter(int e)
     {
+        NotifyEleventhQuest();
         count += e;
         RefreshCounter(); 
+    }
+
+    void NotifyEleventhQuest()
+    {
+        if (ApplesCollected != null)
+        {
+            ApplesCollected();
+        }
     }
 
     public void AddToMineSpeedCounter(float e)

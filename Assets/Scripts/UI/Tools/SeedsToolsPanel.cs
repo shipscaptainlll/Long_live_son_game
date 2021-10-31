@@ -12,7 +12,7 @@ public class SeedsToolsPanel : MonoBehaviour
     [SerializeField] QuickAccessController QuickAccessController;
     private GameObject CurrentlyContactedEarth;
     public event Action<GameObject, String> ProductionTypeChosen = delegate { };
-
+    public event Action CarrotSeedsChosen = delegate { };
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +30,7 @@ public class SeedsToolsPanel : MonoBehaviour
     private void ChooseCarrotSeeds()
     {
         NotifyEarthAboutChoice("CarrotSeeds");
+        NotifyQuestThatCarrotSeedsChosen();
         ForgetEarth();
     }
 
@@ -50,6 +51,14 @@ public class SeedsToolsPanel : MonoBehaviour
         if (ProductionTypeChosen != null)
         {
             ProductionTypeChosen(CurrentlyContactedEarth, TypeOfProduction);
+        }
+    }
+
+    private void NotifyQuestThatCarrotSeedsChosen()
+    {
+        if (CarrotSeedsChosen != null)
+        {
+            CarrotSeedsChosen();
         }
     }
 

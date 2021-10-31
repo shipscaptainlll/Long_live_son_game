@@ -71,7 +71,6 @@ public class MeditationPanel : MonoBehaviour
     {
         float secondsPassed = 0;
         float secondsLimit = 1f;
-        Debug.Log(BonfireAnimation.speed);
         while (secondsPassed < secondsLimit)
         {
             secondsPassed += Time.deltaTime;
@@ -94,7 +93,6 @@ public class MeditationPanel : MonoBehaviour
         }
 
         BonfireAnimation.speed = normalBonfireSpeed;
-        Debug.Log(BonfireAnimation.speed);
     }
 
     //Subtracts meditation cost from main resource counter

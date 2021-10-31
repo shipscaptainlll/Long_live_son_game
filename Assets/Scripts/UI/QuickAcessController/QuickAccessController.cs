@@ -180,7 +180,6 @@ public class QuickAccessController : MonoBehaviour
 
     public void openMeditationPanel()
     {
-        Debug.Log("openMeditationPanel");
         // Teleporting character to the spawn place, associated with this panel
         var offstet = CharacterSpawnMeditation.transform.position - CharacterBody.transform.position;
         CharacterBody.GetComponent<CharacterController>().enabled = false;

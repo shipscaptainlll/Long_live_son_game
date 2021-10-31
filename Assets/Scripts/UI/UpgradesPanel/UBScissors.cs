@@ -22,7 +22,7 @@ public class UBScissors : MonoBehaviour
     public List<GameObject> totalObjects;
     public Button buyNewToolButton;
     public int toolsBought;
-    public int toolsBoughtMax = 4;
+    public int toolsBoughtMax = 8;
     public float toolNumberUpgradeCost;
     public float toolNumberUpgradeCostMultiplier;
     public Text toolNumberUpgradeCostCounter;
@@ -38,7 +38,7 @@ public class UBScissors : MonoBehaviour
     {
         totalObjects = new List<GameObject>();
         toolsBought = 0;
-        toolsBoughtMax = 4;
+        toolsBoughtMax = 8;
         toolNumberUpgradeCost = 50;
         toolNumberUpgradeCostMultiplier = 2.7f;
         for (int i = 0; i < toolsBoughtMax; i++)

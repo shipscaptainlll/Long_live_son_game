@@ -64,7 +64,6 @@ public class CSeedsResourceCounter : MonoBehaviour
     {
         float roundItUp = Mathf.Round(mineSpeedCount * 10.0f);
         float roundAgain = roundItUp * 0.1f;
-        Debug.Log(roundAgain);
         mineSpeedToText.text = roundAgain.ToString();
         SyncWithCargoSpeedCounter();
     }

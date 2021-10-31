@@ -8,94 +8,115 @@ public class EighteenthQuest : MonoBehaviour, IQuest
 {
     public RShardResourceCounter rShardResourceCounter;
     public CSeedsResourceCounter CSeedsResourceCounter;
-    public TreeUpgradePanel TreeUpgradePanel;
+    [SerializeField] InteractionController InteractionController;
+    [SerializeField] SeedsToolsPanel SeedsToolsPanel;
+    [SerializeField] CarrotResourceCounter CarrotResourceCounter;
     public Text objectiveAmmountText;
-    public Text objectiveAmmountText2;
     public Text objectiveAmmountCounter;
     public Text rewardCounter;
     public Image foregroundImage;
-    public GameObject firstObjective;
-    public GameObject secondObjective;
+    public GameObject FirstObjective;
+    public GameObject SecondObjective;
+    public GameObject ThirdObjective;
+    public GameObject FourthObjective;
+    public GameObject FifthObjective;
     public int questID;
     public int nextQuestID;
     public float collectedAmmount;
     public int objectiveAmmount;
     public int rewardAmmount;
     public int updateSpeedSeconds;
+    float collectedCarrotsAmmount;
+    float collectedCarrotsGoal;
 
     public event Action<int, int> questCompleted = delegate { };
     //Eightteenth quest, main objective - to buy carrot seeds, use bucket and scissors on soil, wait until carrots grow
     void Start()
     {
-        //Initialize time during which goal bar will be filled
         updateSpeedSeconds = 1;
-        //Initialize ammount of mined ore
         collectedAmmount = 0;
-        //Initialize goal ammount
         objectiveAmmount = 10;
-        //Initialize this quest id, according to List<> in quest manager
         questID = 17;
-        //Initialize next quest id, according to List<> in quest manager
         nextQuestID = -18;
-        //Initialize shards ammount reward for completing quest
         rewardAmmount = 25;
-        //Subscribe for carrot seeds main counter, that will notify this script when character collected few carrot seeds
+        collectedCarrotsAmmount = 0;
+        collectedCarrotsGoal = 10;
         CSeedsResourceCounter.cSeedsCollected += CompleteFirstObjective;
-        refreshCollectedAmmount();
-        //Give reward counter on panel the ammount you choose from script, more conveniet to do it from one place
+        RefreshCollectedAmmount();
         refreshUI();
     }
 
     private void CompleteFirstObjective()
     {
-        //Unsubscribe from carrot seeds main counter, that notifies this script when character collected few carrot seeds
         CSeedsResourceCounter.cSeedsCollected -= CompleteFirstObjective;
+        StartCoroutine(HideObjective(FirstObjective, SecondObjective));
+        SeedsToolsPanel.CarrotSeedsChosen += CompleteSecondObjective;
     }
 
-    //Calculate percent of mined ores to goal and starts progress bar filling process
-    public void countEarnedManureBags(int manureBagsCollectedAmmount)
+    private void CompleteSecondObjective()
     {
-        
-            collectedAmmount = manureBagsCollectedAmmount;
-            float pct = collectedAmmount / objectiveAmmount;
-            refreshCollectedAmmount();
-            StartCoroutine(changeToPct(pct));
-        if (collectedAmmount >= objectiveAmmount)
-        { //Unsubscribe from manure bags main counter, that will notify this script when character collected a new bag of manure
-            
-            StartCoroutine(hideFirstObjective());
-            //CompleteObjective();
-            //Subscribe for tree upgrade script, that will notify this script when character upgraded tree to a certain level
-            TreeUpgradePanel.TreeLevelChanged += CompleteObjective;
-        }
-        
+        SeedsToolsPanel.CarrotSeedsChosen -= CompleteSecondObjective;
+        StartCoroutine(HideObjective(SecondObjective, ThirdObjective));
+        InteractionController.BucketAdded += CompleteThirdObjective;
     }
 
-    public IEnumerator hideFirstObjective()
+    private void CompleteThirdObjective()
+    {
+        InteractionController.BucketAdded -= CompleteThirdObjective;
+        StartCoroutine(HideObjective(ThirdObjective, FourthObjective));
+        InteractionController.ScissorsAdded += CompleteFourthObjective;
+    }
+
+    private void CompleteFourthObjective()
+    {
+        InteractionController.ScissorsAdded -= CompleteFourthObjective;
+        StartCoroutine(HideObjective(FourthObjective, FifthObjective));
+        CarrotResourceCounter.CollectedSomeCarrots += CountCollectedCarrots;
+    }
+
+    public void CountCollectedCarrots(float collectedCarrots)
+    {
+        collectedAmmount += collectedCarrots;
+        float pct = collectedAmmount / collectedCarrotsGoal;
+        RefreshCollectedAmmount();
+        StartCoroutine(changeToPct(pct));
+        if (collectedAmmount >= collectedCarrotsGoal)
+        {
+            CompleteLastObjective();
+        }
+    }
+
+    public void CompleteLastObjective()
+    {
+        CarrotResourceCounter.CollectedSomeCarrots -= CountCollectedCarrots;
+        getReward();
+        questCompleted(questID, nextQuestID);
+    }
+
+    IEnumerator HideObjective(GameObject hideObjective, GameObject showObjective)
     {
         float elapsed = 0f;
         while (elapsed < updateSpeedSeconds)
         {
             elapsed += Time.deltaTime;
-            firstObjective.GetComponent<CanvasGroup>().alpha -= 0.1f;
+            hideObjective.GetComponent<CanvasGroup>().alpha -= 0.1f;
             yield return null;
         }
-        firstObjective.GetComponent<CanvasGroup>().alpha = 0;
-        StartCoroutine(showSecondObjective());
+        hideObjective.GetComponent<CanvasGroup>().alpha = 0;
+        StartCoroutine(ShowObjective(showObjective));
     }
-    public IEnumerator showSecondObjective()
+    IEnumerator ShowObjective(GameObject showObjective)
     {
         float elapsed = 0f;
         while (elapsed < updateSpeedSeconds)
         {
             elapsed += Time.deltaTime;
-            secondObjective.GetComponent<CanvasGroup>().alpha += 0.1f;
+            showObjective.GetComponent<CanvasGroup>().alpha += 0.1f;
             yield return null;
         }
-        secondObjective.GetComponent<CanvasGroup>().alpha = 1;
+        showObjective.GetComponent<CanvasGroup>().alpha = 1;
     }
 
-    //Start filling the progress bar
     public IEnumerator changeToPct(float pct)
     {
         float preChangePct = foregroundImage.fillAmount;
@@ -110,34 +131,18 @@ public class EighteenthQuest : MonoBehaviour, IQuest
         foregroundImage.fillAmount = pct;
     }
 
-    //Method that calls all methods, when you successfully complete quest
-    public void CompleteObjective(int mainTreeLevel)
-    {
-        if (mainTreeLevel >= 2)
-        {
-            //Unsubscribe from tree upgrade script, that will notify this script when character upgraded tree to a certain level
-            TreeUpgradePanel.TreeLevelChanged -= CompleteObjective;
-            getReward();
-            //Notify QuestPanel(subscriber), that this quest was successfully completed
-            questCompleted(questID, nextQuestID);
-        }
-    }
-
-    //Add shards to main shards counter as reward for completing quest
     public void getReward()
     {
         rShardResourceCounter.AddToCounter(rewardAmmount);
     }
 
-    //refresh reward counter through script in order to not change it manually in unity
     public void refreshUI()
     {
         objectiveAmmountText.text = objectiveAmmount.ToString();
-        objectiveAmmountText2.text = objectiveAmmount.ToString();
         rewardCounter.text = rewardAmmount.ToString();
     }
 
-    public void refreshCollectedAmmount()
+    public void RefreshCollectedAmmount()
     {
         objectiveAmmountCounter.text = collectedAmmount.ToString("0");
     }

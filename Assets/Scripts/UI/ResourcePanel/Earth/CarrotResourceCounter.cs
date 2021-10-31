@@ -11,6 +11,7 @@ public class CarrotResourceCounter : MonoBehaviour
     private Text countToText;
     private Text mineSpeedToText;
 
+    public event Action<float> CollectedSomeCarrots;
     public string Type
     {
         get
@@ -28,6 +29,10 @@ public class CarrotResourceCounter : MonoBehaviour
 
     public void AddToCounter(int e)
     {
+        if (CollectedSomeCarrots != null)
+        {
+            CollectedSomeCarrots(e);
+        }
         count += e;
         RefreshCounter(); 
     }
@@ -52,7 +57,6 @@ public class CarrotResourceCounter : MonoBehaviour
     {
         float roundItUp = Mathf.Round(mineSpeedCount * 10.0f);
         float roundAgain = roundItUp * 0.1f;
-        Debug.Log(roundAgain);
         mineSpeedToText.text = roundAgain.ToString();
     }
 }

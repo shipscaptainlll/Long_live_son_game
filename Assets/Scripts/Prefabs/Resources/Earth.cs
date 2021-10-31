@@ -11,17 +11,22 @@ public class Earth : MonoBehaviour, IResource
     public CarrotResourceCounter carrotResourceCounter;
     public CSeedsResourceCounter cSeedsResourceCounter;
     [SerializeField] ManureResourceCounter ManureResourceCounter;
+    [SerializeField] MeditationPanel MeditationPanel;
     public InteractionController InteractionController; //Interaction controller that notifies earth tile script when scissors, bucket or seeds were used on it
     public Animator miningAnimation;
-    public Bucket_earth_water bucket_Earth_Water;
-    public Bucket_earth_manure BucketEarthManure;
-    [SerializeField] GrowingCarrots GrowingCarrots;
-    [SerializeField] GrowingApples GrowingApples;
+    Bucket_earth_water bucket_Earth_Water;
+    Bucket_earth_manure BucketEarthManure;
+    GrowingCarrots GrowingCarrots;
+    GrowingApples GrowingApples;
+    GameObject Carrots;
+    GameObject Apples;
     public Scissors_tree scissors_Tree;
     public float miningSpeed = 0f;
     public float neededResourcesSpeed = 0f;
     public float miningShardSpeed = 0f;
     public float neededResourcesSpeed2 = 0f;
+    private float manureSpendingSpeedCarrots = 0f;
+    private float manureSpendingSpeedApples = 0f;
     [SerializeField] SeedsToolsPanel SeedsToolsPanel;
     private float aminingSpeed;
     public int damagePerHit;
@@ -81,10 +86,15 @@ public class Earth : MonoBehaviour, IResource
     bool suppliesAreReady;
     bool growingInProgress;
     string productionTypeInProgress;
+    byte meditationModeMultiplier;
 
     private event Action AdjustmentsChanged = delegate { };
     void Start()
     {
+        Carrots = gameObject.transform.Find("Carrots").gameObject;
+        Carrots.GetComponent<Animator>().speed = 0.1f;
+        Apples = gameObject.transform.Find("Apples").gameObject;
+        Apples.GetComponent<Animator>().speed = 0.1f;
         InteractionController.ScissorsContactedWithEarth += ActivateOrDeactivateScissors;
         InteractionController.BucketContactedWithEarth += ActivateOrDeactivateBucket;
         HasCarrotSeeds = false;
@@ -105,6 +115,7 @@ public class Earth : MonoBehaviour, IResource
         carrotSeedsPerCycle = 10;
         appleSeedsPerCycle = 10;
         manurePerCycle = 1;
+        meditationModeMultiplier = 1;
         transform.GetComponent<Health>().currentHealth = objectMaxHealth;
         isProcessed = false;
         //calculateOreCost();
@@ -124,8 +135,7 @@ public class Earth : MonoBehaviour, IResource
         GrowingApples.FinishedGrowingPlant += GatherPlant;
         scissors_Tree = transform.Find("Scissors").GetComponent<Scissors_tree>();
         scissors_Tree.PlantHarvested += RestartGrowing;
-        
-
+        MeditationPanel.startedMeditating += EnterOrLeaveMeditationMode;
     }
 
     //Activates scissors for this pile of earth
@@ -193,6 +203,7 @@ public class Earth : MonoBehaviour, IResource
     private void StopGrowingProcess()
     {
         growingInProgress = false;
+        adjustMiningSpeedNegative();
         productionTypeInProgress = "default";
         GameObject bucket_with_manure = gameObject.transform.Find("Bucket with manure").gameObject;
         bucket_with_manure.SetActive(false);
@@ -218,11 +229,10 @@ public class Earth : MonoBehaviour, IResource
     private void StartGrowingProcess()
     {
         growingInProgress = true;
-        
         productionTypeInProgress = TypeOfProduction;
-        fertilizeTree();
+        FertilizeTree();
         TakeResourcesForCycle();
-        Debug.Log("Growing has started, now growing " + productionTypeInProgress);
+        TakeCareOfMiningSpeeds();
     }
 
     private void RestartGrowing()
@@ -257,7 +267,7 @@ public class Earth : MonoBehaviour, IResource
         suppliesAreReady = enoughManureForCycle && enoughSeedsForCycle;
     }
 
-    private void fertilizeTree()
+    private void FertilizeTree()
     {
         GameObject bucket_with_manure = gameObject.transform.Find("Bucket with manure").gameObject;
         bucket_with_manure.SetActive(true);
@@ -275,17 +285,13 @@ public class Earth : MonoBehaviour, IResource
     {
         if (TypeOfProduction == "CarrotSeeds")
         {
-            GameObject carrots = gameObject.transform.Find("Carrots").gameObject;
-            carrots.SetActive(true);
-            carrots.GetComponent<Animator>().Play("GrowingCarrots");
-            carrots.GetComponent<Animator>().speed = 0.1f;
+            Carrots.SetActive(true);
+            Carrots.GetComponent<Animator>().Play("GrowingCarrots");
         }
         if (TypeOfProduction == "AppleSeeds")
         {
-            GameObject apples = gameObject.transform.Find("Apples").gameObject;
-            apples.SetActive(true);
-            apples.GetComponent<Animator>().Play("GrowingApples");
-            apples.GetComponent<Animator>().speed = 0.1f;
+            Apples.SetActive(true);
+            Apples.GetComponent<Animator>().Play("GrowingApples");
         }
     }
 
@@ -322,94 +328,133 @@ public class Earth : MonoBehaviour, IResource
             aSeedsResourceCounter.AddToCounter((int)-appleSeedsPerCycle);
         }
     }
-    /*
-    public void calculateOreCost()
+    
+    void calculateOreCost()
     {
-        cost = applesInEarth;
-        costShard = carrotsInEarth;
+        cost = applesPerCycle;
+        costShard = carrotsPerCycle;
         neededResources = aSeedsPerEarth;
         neededResources2 = cSeedsPerEarth;
     }
 
-    public void calculateMiningSpeed()
+    void TakeCareOfMiningSpeeds()
     {
-        gameObject.transform.Find("Bucket with manure").gameObject.SetActive(true);
-        gameObject.transform.Find("Bucket with water").gameObject.SetActive(true);
-        gameObject.transform.Find("Scissors").gameObject.SetActive(true);
-        fertilizingOSpeed = 2.5f;
-        fertilizingSpeed = gameObject.transform.Find("Bucket with manure").GetComponent<Animator>().GetFloat("speedAMining");
-        wateringOSpeed = 1;
-        wateringSpeed = gameObject.transform.Find("Bucket with water").GetComponent<Animator>().GetFloat("speedAMining");
-        growingCOSpeed = 5;
-        growingCSpeed = 1;
-        growingAOSpeed = 8;
-        growingASpeed = 1;
-        harvestingOSpeed = 4.5f;
-        harvestingSpeed = gameObject.transform.Find("Scissors").GetComponent<Animator>().GetFloat("speedAMining");
-        
-        gameObject.transform.Find("Bucket with water").gameObject.SetActive(false);
-        gameObject.transform.Find("Scissors").gameObject.SetActive(false);
-
-        miningSpeed = carrotsInEarth / (fertilizingOSpeed / fertilizingSpeed + wateringOSpeed / wateringSpeed + growingCOSpeed / growingCSpeed + harvestingOSpeed / harvestingSpeed); 
-        miningShardSpeed = applesInEarth / (fertilizingOSpeed / fertilizingSpeed + wateringOSpeed / wateringSpeed + growingAOSpeed / growingASpeed + harvestingOSpeed / harvestingSpeed);
-        neededResourcesSpeed = aSeedsPerEarth / (fertilizingOSpeed / fertilizingSpeed + wateringOSpeed / wateringSpeed + growingCOSpeed / growingCSpeed + harvestingOSpeed / harvestingSpeed);
-        neededResourcesSpeed2 = cSeedsPerEarth / (fertilizingOSpeed / fertilizingSpeed + wateringOSpeed / wateringSpeed + growingAOSpeed / growingASpeed + harvestingOSpeed / harvestingSpeed);
-        //neededResourcesSpeed = aSeedsPerEarth * (damagePerHit * aminingSpeed / objectMaxHealth);
-        //miningShardSpeed = carrotsInEarth * (damagePerHit * aminingSpeed / objectMaxHealth);
-        //neededResourcesSpeed2 = cSeedsPerEarth * (damagePerHit * aminingSpeed / objectMaxHealth);
+        calculateMiningSpeed();
         adjustMiningSpeedCounter();
     }
-    
 
-
-    
-
-    
-    
-
-    public void adjustMiningSpeedCounter()
+    void calculateMiningSpeed()
     {
-        if (isGatheringCarrots == true)
+        
+        fertilizingOSpeed = 2.5f;
+        fertilizingSpeed = 1;
+        wateringOSpeed = 1;
+        wateringSpeed = 1;
+        growingCOSpeed = 0.83f;
+        growingCSpeed = 0.1f;
+        growingAOSpeed = 0.916f;
+        growingASpeed = 0.1f;
+        harvestingOSpeed = 4.5f;
+
+        harvestingSpeed = 1;
+        
+        
+        miningSpeed = meditationModeMultiplier * carrotsPerCycle / (fertilizingOSpeed / fertilizingSpeed + wateringOSpeed / wateringSpeed + growingCOSpeed / growingCSpeed + harvestingOSpeed / harvestingSpeed); 
+        miningShardSpeed = meditationModeMultiplier * applesPerCycle / (fertilizingOSpeed / fertilizingSpeed + wateringOSpeed / wateringSpeed + growingAOSpeed / growingASpeed + harvestingOSpeed / harvestingSpeed);
+        neededResourcesSpeed = meditationModeMultiplier * carrotSeedsPerCycle / (fertilizingOSpeed / fertilizingSpeed + wateringOSpeed / wateringSpeed + growingCOSpeed / growingCSpeed + harvestingOSpeed / harvestingSpeed);
+        neededResourcesSpeed2 = meditationModeMultiplier * appleSeedsPerCycle / (fertilizingOSpeed / fertilizingSpeed + wateringOSpeed / wateringSpeed + growingAOSpeed / growingASpeed + harvestingOSpeed / harvestingSpeed);
+        manureSpendingSpeedCarrots = meditationModeMultiplier * manurePerCycle / (fertilizingOSpeed / fertilizingSpeed + wateringOSpeed / wateringSpeed + growingCOSpeed / growingCSpeed + harvestingOSpeed / harvestingSpeed);
+        manureSpendingSpeedApples = meditationModeMultiplier * manurePerCycle / (fertilizingOSpeed / fertilizingSpeed + wateringOSpeed / wateringSpeed + growingAOSpeed / growingASpeed + harvestingOSpeed / harvestingSpeed);
+    }
+
+    void adjustMiningSpeedCounter()
+    {
+        if (TypeOfProduction == "CarrotSeeds")
         {
             carrotResourceCounter.AddToMineSpeedCounter((float)miningSpeed);
             cSeedsResourceCounter.AddToMineSpeedCounter((float)-neededResourcesSpeed2);
-            
+            ManureResourceCounter.AddToMineSpeedCounter((float)-manureSpendingSpeedCarrots);
         }
-        if (isGatheringApples == true)
+        if (TypeOfProduction == "AppleSeeds")
         {
             appleResourceCounter.AddToMineSpeedCounter((float)miningShardSpeed);
             aSeedsResourceCounter.AddToMineSpeedCounter((float)-neededResourcesSpeed);
-
+            ManureResourceCounter.AddToMineSpeedCounter((float)-manureSpendingSpeedApples);
         }
-        //appleResourceCounter.AddToMineSpeedCounter((float)miningSpeed);
-        //
-        
-        //
-
     }
 
-    public void adjustMiningSpeedNegative()
+    void adjustMiningSpeedNegative()
     {
-        if (isGatheringCarrots == true)
+        if (productionTypeInProgress == "CarrotSeeds")
         {
             float negativeMiningSpeed = -miningSpeed;
             carrotResourceCounter.AddToMineSpeedCounter((float)negativeMiningSpeed);
             cSeedsResourceCounter.AddToMineSpeedCounter((float)neededResourcesSpeed2);
-
+            ManureResourceCounter.AddToMineSpeedCounter((float)manureSpendingSpeedCarrots);
         }
-        if (isGatheringApples == true)
+        if (productionTypeInProgress == "AppleSeeds")
         {
             float negativeShardMiningSpeed = -miningShardSpeed;
             appleResourceCounter.AddToMineSpeedCounter((float)negativeShardMiningSpeed);
             aSeedsResourceCounter.AddToMineSpeedCounter((float)neededResourcesSpeed);
+            ManureResourceCounter.AddToMineSpeedCounter((float)manureSpendingSpeedApples);
+        }
+    }
+
+    void EnterOrLeaveMeditationMode(byte miningSpeedMultiplier, bool isMeditating)
+    {
+        
+            ChangeAnimationsSpeed(miningSpeedMultiplier, isMeditating);
+            ChangeAnimationsSpeedCounters(miningSpeedMultiplier, isMeditating);
+    }
+
+    void ChangeAnimationsSpeed(byte miningSpeedMultiplier, bool isMeditating)
+    {
+        if (isMeditating == true)
+        {
+            GameObject bucket_with_manure = gameObject.transform.Find("Bucket with manure").gameObject;
+            GameObject bucket_with_water = gameObject.transform.Find("Bucket with water").gameObject;
+            GameObject carrots = gameObject.transform.Find("Carrots").gameObject;
+            GameObject apples = gameObject.transform.Find("Apples").gameObject;
+            GameObject scissors = gameObject.transform.Find("Scissors").gameObject;
+            GameObject scissors1 = gameObject.transform.Find("Scissors1").gameObject;
+            bucket_with_manure.GetComponent<Animator>().speed *= miningSpeedMultiplier;
+            bucket_with_water.GetComponent<Animator>().speed *= miningSpeedMultiplier;
+            carrots.GetComponent<Animator>().speed *= miningSpeedMultiplier;
+            apples.GetComponent<Animator>().speed *= miningSpeedMultiplier;
+            scissors.GetComponent<Animator>().speed *= miningSpeedMultiplier;
+            scissors1.GetComponent<Animator>().speed *= miningSpeedMultiplier;
+        } else
+        {
+            GameObject bucket_with_manure = gameObject.transform.Find("Bucket with manure").gameObject;
+            GameObject bucket_with_water = gameObject.transform.Find("Bucket with water").gameObject;
+            GameObject carrots = gameObject.transform.Find("Carrots").gameObject;
+            GameObject apples = gameObject.transform.Find("Apples").gameObject;
+            GameObject scissors = gameObject.transform.Find("Scissors").gameObject;
+            GameObject scissors1 = gameObject.transform.Find("Scissors1").gameObject;
+            bucket_with_manure.GetComponent<Animator>().speed /= miningSpeedMultiplier;
+            bucket_with_water.GetComponent<Animator>().speed /= miningSpeedMultiplier;
+            carrots.GetComponent<Animator>().speed /= miningSpeedMultiplier;
+            apples.GetComponent<Animator>().speed /= miningSpeedMultiplier;
+            scissors.GetComponent<Animator>().speed /= miningSpeedMultiplier;
+            scissors1.GetComponent<Animator>().speed /= miningSpeedMultiplier;
         }
         
-        //float negativeShardMiningSpeed = -miningShardSpeed;
-        //float negativeNeededResourcesSpeed = neededResourcesSpeed;
-        //float negativeneededResourcesSpeed2 = neededResourcesSpeed2;
-        //appleResourceCounter.AddToMineSpeedCounter((float)negativeMiningSpeed);
+    }
+
+    void ChangeAnimationsSpeedCounters(byte miningSpeedMultiplier, bool isMeditating)
+    {
+        if (isMeditating)
+        {
+            adjustMiningSpeedNegative();
+            meditationModeMultiplier = miningSpeedMultiplier;
+            TakeCareOfMiningSpeeds();
+        } else
+        {
+            adjustMiningSpeedNegative();
+            meditationModeMultiplier = 1;
+            TakeCareOfMiningSpeeds();
+        }
         
-        //aSeedsResourceCounter.AddToMineSpeedCounter((float)negativeNeededResourcesSpeed);
-        //cSeedsResourceCounter.AddToMineSpeedCounter((float)negativeneededResourcesSpeed2);
-    }*/
+    }
 }

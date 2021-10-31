@@ -22,7 +22,7 @@ public class UBBucket : MonoBehaviour
     public List<GameObject> totalObjects;
     public Button buyNewToolButton;
     public int toolsBought;
-    public int toolsBoughtMax = 1;
+    public int toolsBoughtMax = 7;
     public float toolNumberUpgradeCost;
     public float toolNumberUpgradeCostMultiplier;
     public Text toolNumberUpgradeCostCounter;
@@ -38,7 +38,7 @@ public class UBBucket : MonoBehaviour
     {
         totalObjects = new List<GameObject>();
         toolsBought = 0;
-        toolsBoughtMax = 1;
+        toolsBoughtMax = 7;
         toolNumberUpgradeCost = 100;
         toolNumberUpgradeCostMultiplier = 2.7f;
         for (int i = 0; i < toolsBoughtMax; i++)
