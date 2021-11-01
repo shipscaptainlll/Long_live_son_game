@@ -192,6 +192,7 @@ public class CharacterAnimation : MonoBehaviour
 
     public void stopMunallyCollectingTree()
     {
+        Debug.Log("Here");
         interactionController.stopTreeInteractManually();
     }
 }

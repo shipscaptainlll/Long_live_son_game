@@ -12,6 +12,7 @@ public class LogResourceCounter : MonoBehaviour
     public Text mineSpeedToText;
     public CargoResourceCounter cargoResourceCounter;
 
+    public event Action<int> LogCollected = delegate { };
     public string Type
     {
         get
@@ -30,7 +31,8 @@ public class LogResourceCounter : MonoBehaviour
     public void AddToCounter(float e)
     {
         count += e;
-        RefreshCounter(); 
+        RefreshCounter();
+        NotifyThatLogCollected((int)e);
     }
 
     public void AddToMineSpeedCounter(float e)
@@ -60,5 +62,13 @@ public class LogResourceCounter : MonoBehaviour
     {
         cargoResourceCounter.mineSpeedCount = mineSpeedCount;
         cargoResourceCounter.RefreshMineSpeedCounter();
+    }
+
+    void NotifyThatLogCollected(int LoggsAmmount)
+    {
+        if (LogCollected != null)
+        {
+            LogCollected(LoggsAmmount);
+        }
     }
 }

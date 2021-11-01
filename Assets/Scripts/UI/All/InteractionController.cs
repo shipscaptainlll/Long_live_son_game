@@ -49,6 +49,8 @@ public class InteractionController : MonoBehaviour
 
     //Boulder blast
     [SerializeField] GameObject BoulderBlastPanel;
+    public event Action<GameObject> UsedBlastOnBoulder = delegate { };
+    public event Action WallDestroyed = delegate { };
     // Start is called before the first frame update
     void Start()
     {
@@ -458,6 +460,7 @@ public class InteractionController : MonoBehaviour
 
     public void TreeInteractManually(GameObject tree)
     {
+        
         if (tree.transform.parent.parent.GetComponent<Tree>().isProcessedManually == false)
         {
             axe.SetActive(true);
@@ -469,8 +472,10 @@ public class InteractionController : MonoBehaviour
             //Debug.Log("Hello tree");
             //boulder.GetComponent<Boulder>().calculateMiningSpeed();
             //Debug.Log("Activated");
+        } else { 
         }
     }
+    
 
     public void stopTreeInteractManually()
     {
@@ -482,6 +487,7 @@ public class InteractionController : MonoBehaviour
         lastContactedObject = null;
         isMiningSomething = false;
         axe.SetActive(false);
+        characterAnimator.Play("TrueIdle");
     }
 
     public bool IsMiningSomething
@@ -498,9 +504,24 @@ public class InteractionController : MonoBehaviour
     {
         if (CheckIfToolPanelOpened(BoulderBlastPanel.gameObject))
         {
-            objectDetected.transform.parent.gameObject.SetActive(false);
-            Debug.Log("Wall is destroyed");
+            NotifyWall(objectDetected);
+            NotifyQuest();
         }
-        
+    }
+
+    void NotifyWall(GameObject objectDetected)
+    {
+        if (UsedBlastOnBoulder != null)
+        {
+            UsedBlastOnBoulder(objectDetected);
+        }
+    }
+
+    void NotifyQuest()
+    {
+        if (WallDestroyed != null)
+        {
+            WallDestroyed();
+        }
     }
 }

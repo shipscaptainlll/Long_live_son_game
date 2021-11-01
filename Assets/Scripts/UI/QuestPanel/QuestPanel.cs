@@ -15,13 +15,11 @@ public class QuestPanel : MonoBehaviour
         foreach (Transform quest in transform)
         {
             countOfQuests++;
-            Debug.Log("hello world");
         }
         for (int i = 0; i < countOfQuests; i++)
         {
             listOfQuests.Add(transform.GetChild(i).gameObject);
             listOfQuests[i].GetComponent<IQuest>().questCompleted += refreshCurrentQuest;
-            Debug.Log(listOfQuests[i]);
         }
         countOfQuests = 0;
         countOfActiveQuest = 0;
@@ -45,8 +43,6 @@ public class QuestPanel : MonoBehaviour
             countOfActiveQuest += 1;
             openNextQuest(nextQuestID);
         }
-        Debug.Log(countOfActiveQuest);
-        Debug.Log("Hello world, it's working!");
     }
 
     //Dynamically increases active quest panel transparency and then closes it

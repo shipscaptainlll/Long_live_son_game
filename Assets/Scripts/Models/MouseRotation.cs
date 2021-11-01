@@ -97,7 +97,7 @@ public class MouseRotation : MonoBehaviour
 
                 itemDetectedGO = hit.collider.gameObject;
                 itemDetectedDistance = hit.distance;
-                Debug.Log(itemDetectedGO + " " + hit.distance);
+                //Debug.Log(itemDetectedGO + " " + hit.distance);
                 if (hit.distance <= 5f 
                     && QuickAccessController.currentlyOpened == null
                     && QuickAccessController.QAPIsOpened == false
