@@ -20,7 +20,7 @@ public class TwentyFirstQuest : MonoBehaviour, IQuest
     void Start()
     {
         questID = 20;
-        nextQuestID = -21;
+        nextQuestID = 21;
         rewardAmmount = 15;
         InteractionController.WallDestroyed += CompleteLastObjective;
         refreshRewardCounter();

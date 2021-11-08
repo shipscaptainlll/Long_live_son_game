@@ -94,6 +94,8 @@ public class PersonMovement : MonoBehaviour
     //UI animation
     public AnimationCalledUI animationUI;
 
+    //CowsMainResoruceCounter 
+    [SerializeField] CowMainResourceCounter CowMainResourceCounter;
     //Other
 
     // Start is called before the first frame update
@@ -243,6 +245,7 @@ public class PersonMovement : MonoBehaviour
             appleResourceCounter.AddToCounter(10000);
             cSeedsResourceCounter.AddToCounter(10000);
             aSeedsResourceCounter.AddToCounter(10000);
+            CowMainResourceCounter.AddToCounter(1000);
         }
         if (Input.GetKeyUp(KeyCode.I))
         {

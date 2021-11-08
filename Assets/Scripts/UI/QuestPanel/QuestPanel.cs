@@ -25,7 +25,7 @@ public class QuestPanel : MonoBehaviour
         countOfActiveQuest = 0;
         questPanelPositionMultiplier = 250;
     //showing first quest
-    refreshCurrentQuest(-1, 19);
+    refreshCurrentQuest(-1, 20);
     }
 
     
