@@ -23,7 +23,7 @@ public class FarmsPeople : MonoBehaviour
     bool _personOneActive;
     bool _personTwoActive;
 
-
+    public event Action SomeoneIsHired = delegate { };
     void Start()
     {
         _currentLevel = 0;
@@ -64,6 +64,8 @@ public class FarmsPeople : MonoBehaviour
 
     void ShowPerson()
     {
+        Debug.Log("Should be working here");
+        NotifyQuest();
         if (_currentLevel == 1)
         {
             Person1.gameObject.SetActive(true);
@@ -83,5 +85,12 @@ public class FarmsPeople : MonoBehaviour
             NextLevelText.text = "MAX";
         }
     }
-
+    
+    void NotifyQuest()
+    {
+        if (SomeoneIsHired != null)
+        {
+            SomeoneIsHired();
+        }
+    }
 }

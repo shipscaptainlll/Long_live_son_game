@@ -12,6 +12,7 @@ public class TwentySecondQuest : MonoBehaviour, IQuest
     [SerializeField] GameObject FirstObjective;
     [SerializeField] Transform Farms;
     int questID;
+    int additionalQuestID;
     int nextQuestID;
     int rewardAmmount;
 
@@ -26,7 +27,7 @@ public class TwentySecondQuest : MonoBehaviour, IQuest
         }
         
         questID = 21;
-        nextQuestID = -22;
+        nextQuestID = 22;
         rewardAmmount = 15;
         refreshRewardCounter();
     }
@@ -55,4 +56,5 @@ public class TwentySecondQuest : MonoBehaviour, IQuest
             Farm.GetComponent<IFarmUI>().FarmIsCreated -= CompleteLastObjective;
         }
     }
+
 }

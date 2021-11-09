@@ -33,7 +33,7 @@ public class InvisibleFarmUI : MonoBehaviour, IFarmUI
     {
         get
         {
-            return _isKnown;
+            return true;
         }
     }
 
