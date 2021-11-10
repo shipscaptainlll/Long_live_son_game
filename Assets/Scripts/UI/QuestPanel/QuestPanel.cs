@@ -25,7 +25,7 @@ public class QuestPanel : MonoBehaviour
         countOfActiveQuest = 0;
         questPanelPositionMultiplier = 250;
     //showing first quest
-    refreshCurrentQuest(-1, 22);
+    refreshCurrentQuest(-1, 0);
     }
 
     
@@ -56,7 +56,9 @@ public class QuestPanel : MonoBehaviour
             //Unsubscribe quest manager from this quest
             //listOfQuests[completedQuestID].GetComponent<IQuest>().questCompleted -= refreshCurrentQuest;
         }
-        if (completedQuestID != 14 && completedQuestID != 22)
+        if (completedQuestID != 14 
+            && completedQuestID != 22 
+            && completedQuestID != 23)
         {
             listOfQuests[completedQuestID].SetActive(false);
         }

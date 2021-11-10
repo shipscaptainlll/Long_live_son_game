@@ -51,7 +51,7 @@ public class ChooseFarm : MonoBehaviour
         _currentlyShownFarmNumber = 1;
         //_farmNumberInArray = FoundFarmArray[_currentlyShownFarmNumber - 1].FarmNumber;
         //currentlyShownFarm = FarmArrayUI[_farmNumberInArray-1];
-        VisualizeFarm(_currentlyShownFarmNumber);
+        //VisualizeFarm(_currentlyShownFarmNumber);
     }
 
     void VisualizeFarm(int farmNumber)

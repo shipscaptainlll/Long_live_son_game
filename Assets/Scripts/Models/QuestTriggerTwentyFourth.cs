@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Merchant15QuestTrigger : MonoBehaviour
+public class QuestTriggerTwentyFourth : MonoBehaviour
 {
-    public event Action CharacterReachedSphere = delegate { };
+    public event Action CharacterReachedRectangle = delegate { };
     void Start()
     {
         
@@ -13,9 +13,9 @@ public class Merchant15QuestTrigger : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if (CharacterReachedSphere != null)
+        if (CharacterReachedRectangle != null)
         {
-            CharacterReachedSphere();
+            CharacterReachedRectangle();
         }
     }
 }
